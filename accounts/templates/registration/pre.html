@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+
+{% block  content %}
+<h1>Are you signing up as a </h1> 
+<a class="btn btn-primary" href="{% url 'accounts:biz' %}">Business</a>
+<a class="btn btn-primary" href="{% url 'accounts:emp' %}">Employee</a>
+{% endblock %}

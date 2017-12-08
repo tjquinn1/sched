@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<div class="row">
+    <form  method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-group">
+            {{ form.name.errors }}
+            <label for="{{ form.name.id_for_label }}">Location Name</label>
+            {{ form.name }}
+        </div>
+        <section>
+            <div class="form-group">
+                {{ form.sunday_start.errors }}
+                <label for="{{ form.sunday_start.id_for_label }}">Sunday Opening</label>
+                {{ form.sunday_start }}
+            </div>
+            <div class="form-group">
+                {{ form.sunday_end.errors }}
+                <label for="{{ form.sunday_end.id_for_label }}">Sunday Closing</label>
+                {{ form.sunday_end }}
+            </div>
+        </section>
+        <section>
+            <div class="form-group">
+                {{ form.monday_start.errors }}
+                <label for="{{ form.monday_start.id_for_label }}">Monday Opening</label>
+                {{ form.monday_start }}
+            </div>
+            <div class="form-group">
+                {{ form.monday_end.errors }}
+                <label for="{{ form.monday_end.id_for_label }}">Monday Closing</label>
+                {{ form.monday_end }}
+            </div>
+        </section>
+        <section>
+            <div class="form-group">
+                {{ form.tuesday_start.errors }}
+                <label for="{{ form.tuesday_start.id_for_label }}">Tuesday Opening</label>
+                {{ form.tuesday_start }}
+            </div>
+            <div class="form-group">
+                {{ form.tuesday_end.errors }}
+                <label for="{{ form.tuesday_end.id_for_label }}">Tuesday Closing</label>
+                {{ form.tuesday_end }}
+            </div>
+        </section>
+        <section>
+            <div class="form-group">
+                {{ form.wednesday_start.errors }}
+                <label for="{{ form.wednesday_start.id_for_label }}">Wednesday Opening</label>
+                {{ form.wednesday_start }}
+            </div>
+            <div class="form-group">
+                {{ form.wednesday_end.errors }}
+                <label for="{{ form.wednesday_end.id_for_label }}">Wednesday Closing</label>
+                {{ form.wednesday_end }}
+            </div>
+        </section>
+        <section>
+            <div class="form-group">
+                {{ form.thursday_start.errors }}
+                <label for="{{ form.thursday_start.id_for_label }}">Thursday Opening</label>
+                {{ form.thursday_start }}
+            </div>
+            <div class="form-group">
+                {{ form.thursday_end.errors }}
+                <label for="{{ form.thursday_end.id_for_label }}">Thursday Closing</label>
+                {{ form.thursday_end }}
+            </div>
+        </section>
+        <section>
+            <div class="form-group">
+                {{ form.friday_start.errors }}
+                <label for="{{ form.friday_start.id_for_label }}">Friday Opening</label>
+                {{ form.friday_start }}
+            </div>
+            <div class="form-group">
+                {{ form.friday_end.errors }}
+                <label for="{{ form.friday_end.id_for_label }}">Friday Closing</label>
+                {{ form.friday_end }}
+            </div>
+        </section>
+        <section>
+            <div class="form-group">
+                {{ form.saturday_start.errors }}
+                <label for="{{ form.saturday_start.id_for_label }}">Saturday Opening</label>
+                {{ form.saturday_start }}
+            </div>
+            <div class="form-group">
+                {{ form.saturday_end.errors }}
+                <label for="{{ form.saturday_end.id_for_label }}">Saturday Closing</label>
+                {{ form.saturday_end }}
+            </div>
+        </section>
+
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+{% endblock %}
