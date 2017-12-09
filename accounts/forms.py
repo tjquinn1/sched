@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.forms.widgets import PasswordInput, TextInput
 from django import forms
 from . import models
+from .models import User
 from .models import Biz
 from.models import Emp
 
@@ -33,6 +34,15 @@ class BizForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["name"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Name'})
         
+
+class CustomLoginForm(forms.Form):
+    email = forms.CharField(label='Email', max_length=100)
+    password = forms.CharField(label='Password', max_length=100, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Email'})
+        self.fields["password"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Password'})
 
 class PartialUserForm(forms.ModelForm):
     class Meta:

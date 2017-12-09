@@ -8,41 +8,35 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from . import forms
 from django.template import RequestContext
-from django.contrib.auth import (login as auth_login,  authenticate)
+from django.contrib.auth import authenticate
 from django.http import HttpResponseRedirect
 import random
 import string
 from .models import Biz
+from django.contrib import messages
 
 
-def login(request):
-    _message = 'Please sign in'
-    if request.method == 'POST':
-        _username = request.POST['username']
-        _password = request.POST['password']
-        if not request.POST.get('remember-me', None):
-            request.session.set_expiry(0)
-        user = authenticate(username=_username, password=_password)
-
-        if user is not None:
-            if user.is_active:
-                auth_login(request, user)
-                return HttpResponseRedirect('/')
-            else:
-                _message = 'Your account is not activated'
-        else:
-            _message = 'Invalid login, please try again.'
-    context = {'message': _message}
-    return render(request, 'registration/login.html', context)
-
-
-
-class LogoutView(generic.RedirectView):
-    url = reverse_lazy("home")
+def custom_login(request):
+    form = forms.CustomLoginForm()
     
-    def get(self, request, *args, **kwargs):
-        logout(request)
-        return super().get(request, *args, **kwargs)
+    if request.method == 'POST':
+        form = forms.CustomLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            user = authenticate(email=username, password=password)
+            auth_login(request, user)
+            messages.success(request, "Welcome {}".format(form.cleaned_data['email']))
+            return HttpResponseRedirect('/login_success/')
+    return render(request, 'registration/login.html', {'form': form})
+
+
+
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("/home/")
 
 
 class SignUp(generic.CreateView):

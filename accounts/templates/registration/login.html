@@ -13,23 +13,31 @@
 </ul>
 {% endif %}
 <div class="container">
-  <form class="form-signin" action="{% url 'login' %}" method="post" id="login-form">{% csrf_token %}
-    <h2 class="form-signin-heading">{{ message }}</h2>
-    <div class="form-group">
-      <label for="id_username" class="sr-only">Email address</label>
-      <input type="text" name="username" id="id_username" class="form-control" placeholder="User Name" required autofocus>
+    
+    
+
+    <div class="row">
+        <form  method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <section>
+                <div class="form-group">
+                    {{ form.email.errors }}
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                </div>
+                <div class="form-group">
+                    {{ form.password.errors }}
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    {{ form.password }}
+                </div>
+            </section>
+     
+    
+    
+            <input type="submit" value="Submit" />
+        </form>
     </div>
-    <div class="form-group">
-      <label for="id_password" class="sr-only">Password</label>
-      <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required>
-    </div>  
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" value="remember-me"> Remember me
-      </label>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-  </form>
-</div>
+
 
 {% endblock %}
