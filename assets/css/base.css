@@ -1,3 +1,19 @@
 #canvas {
     background-color:lightgray;
 }
+.b {
+    display: block;
+    clear: left;
+}
+.b h1,
+.b a {
+    display: inline;
+}
+.cv {
+    display: inline-block;
+  }
+  .date {
+    display: inline-block;
+    float:left;
+  }
+

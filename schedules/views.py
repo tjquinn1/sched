@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 
-# Create your views here.
+
+def create(request):
+    
+    return render(request, 'schedules/create.html', {'form':form})

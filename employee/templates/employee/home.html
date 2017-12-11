@@ -1,10 +1,39 @@
 {% extends "layout.html" %}
+
 {% load static %}
+
 
 {% block content %}
 
 <h1> Employee Home</h1>
 
+<div id="app-7">
 
+    <date></date>
 
+      <!--
+        Now we provide each todo-item with the todo object
+        it's representing, so that its content can be dynamic.
+        We also need to provide each component with a "key",
+        which will be explained later.
+      -->
+
+      <todo-item
+        v-for="item in groceryList"
+        v-bind:todo="item"
+        v-bind:key="item.id"
+        >
+      </todo-item>
+
+    
+  </div>
+  
+<script>
+    var pants = "{{ pants }}";
+</script>
+
+{% endblock %}
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="{% static 'js/date.js' %}"></script>
 {% endblock %}
