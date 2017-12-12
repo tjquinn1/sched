@@ -8,7 +8,7 @@
 <div>
     <h3>Create Sched</h3>
     {% for location in locations  %}
-        <a href="{% url scheduless:create' pk=location.pk %}">{{ location.name }}</a>
+        <a href="{% url 'schedules:create' location.id %}">{{ location.name }}</a>
     {% endfor %}
 </div>
 

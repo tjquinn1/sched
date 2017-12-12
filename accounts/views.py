@@ -25,9 +25,12 @@ def custom_login(request):
             username = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             user = authenticate(email=username, password=password)
-            auth_login(request, user)
-            messages.success(request, "Welcome {}".format(form.cleaned_data['email']))
-            return HttpResponseRedirect('/login_success/')
+            if user is not None:
+                auth_login(request, user)
+                messages.success(request, "Welcome {}".format(request.user.first_name))
+                return HttpResponseRedirect('/login_success/')
+            else:
+                messages.error(request, "Your user name or password is incorect")
     return render(request, 'registration/login.html', {'form': form})
 
 

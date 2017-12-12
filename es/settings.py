@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'locations',
     'business',
     'employee',
+    'schedules',
 ]
 
 MIDDLEWARE = [

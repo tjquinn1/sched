@@ -5,13 +5,11 @@ Vue.component('date', {
                <button class="c" v-on:click="previousDay">&lsaquo;</button>
                <h1>{{ this.ss }}</h1>
                <button class="c" v-on:click="nextDay">&rsaquo;</button>
-               <h1>{{ this.nd }}</h1>
                </div>`,
     data: function() {
         return {
         today : new Date,
         tomorrow : new Date(),
-        nd: pants,
         ss: ''
         }
     },
@@ -45,6 +43,8 @@ Vue.component('date', {
   
   })
 
+  
+
 Vue.component('todo-item', {
     props: ['todo'],
     template: `<div class="cv">
@@ -59,14 +59,7 @@ Vue.component('todo-item', {
   var app7 = new Vue({
     el: '#app-7',
     data: {
-      groceryList: [
-        { id: 0, text: 'Vegetables' },
-        { id: 1, text: 'Cheese' },
-        { id: 2, text: 'Whatever else humans are supposed to eat' },
-        { id: 3, text: 'kjhjhhjkkjhhjkhklj'},
-        { id: 4, text: 'same'},
-        { id: 5, text: 'carol'}
-      ]
+      groceryList: l,
     }
   })
   
@@ -432,7 +425,8 @@ Vue.component('todo-item', {
   init();
       
   }
-  
-  for(i=0; i<8;i++){
+var end = sf[sf.length-1] + 1
+console.log(sf[sf.length])
+for(i=sf[0]; i < end;i++){
     setGraph("cv" + i)
   }

@@ -10,3 +10,4 @@ def home(request):
     locations = Location.objects.filter(biz_id=biz)
     return render(request, 'business/home.html', {'locations':locations})
 
+

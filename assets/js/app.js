@@ -1,3 +1,3 @@
 $(document).ready(function(){
-    $('.message').delay(5000).fadeOut();
+    $('.message').delay(2000).fadeOut();
 });
