@@ -7,11 +7,30 @@ import json
 
 def create(request, pk):
     biz = get_object_or_404(Biz, owner=request.user.id)
-    print(biz)
+    location = get_object_or_404(Location, pk=pk)
     locations = Location.objects.filter(biz_id=biz)
+
+    print(location.sunday_start)
     emps = Emp.objects.filter(biz_id=biz)
     l = []
     sf = []
+    d = {}
+    d['name'] = location.name
+    d['sunday_start'] = location.sunday_start
+    d['sunday_end'] = location.sunday_end
+    d['monday_start'] = location.monday_start
+    d['monday_end'] = location.monday_end
+    d['tuesday_start'] = location.tuesday_start
+    d['tuesday_end'] = location.tuesday_end
+    d['wednesday_start'] = location.wednesday_start
+    d['wednesday_end'] = location.wednesday_end
+    d['thursday_start'] = location.thursday_start
+    d['thursday_end'] = location.thursday_end
+    d['friday_start'] = location.friday_start
+    d['friday_end'] = location.friday_end
+    d['saturday_start'] = location.saturday_start
+    d['saturday_end'] = location.saturday_end
+    
     for emp in emps:
         j = {}
         j['id'] = emp.emp_id
@@ -39,7 +58,8 @@ def create(request, pk):
         'emps':emps, 
         'emps_length':emps_length, 
         'l':l,
-        'sf':sf
+        'sf':sf,
+        'd': d
     }
     return render(request, 'schedules/create.html', context)
 

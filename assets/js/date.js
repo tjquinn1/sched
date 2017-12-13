@@ -10,7 +10,12 @@ Vue.component('date', {
         return {
         today : new Date,
         tomorrow : new Date(),
-        ss: ''
+        ss: '',
+        start: 0,
+        end: 0,
+        st: 0,
+        lines: 0,
+        day: 0
         }
     },
     methods: {
@@ -26,18 +31,95 @@ Vue.component('date', {
         },
         set: function () {
             this.ss = this.today.toDateString();
+        },
+        getD: function () {
+            day = this.today.getDay();
+            if (day == 0) {
+                start = d.sunday_start;
+                end = d.sunday_end;
+                st = Math.ceil((end - start) / 100) * 100;
+                console.log(st);
+                lines = (st + 100) / 100
+                return lines
+                
+            } else if (day == 1) {
+                start = d.monday_start;
+                end = d.monday_end;
+                st = Math.ceil((end - start) / 100) * 100;
+                console.log(st);
+                lines = (st + 100) / 100
+                return lines
+                
+            } else if (day == 2) {
+                start = d.tuesday_start;
+                end = d.tuesday_end;
+                st = Math.ceil((end - start) / 100) * 100;
+                console.log(st);
+                lines = (st + 100) / 100
+                return lines
+                
+            } else if (day == 3) {
+                start = d.wednesday_start;
+                end = d.wednesday_end;
+                st = Math.ceil((end - start) / 100) * 100;
+                console.log(st);
+                lines = (st + 100) / 100
+                return lines
+                
+            }
+            
+
         }
+    },
+    watch: {
+        ss: function() {
+           console.log('yes');
+           day = this.today.getDay();
+           if (day == 0) {
+               start = d.sunday_start;
+               end = d.sunday_end;
+               st = Math.ceil((end - start) / 100) * 100;
+               console.log(st);
+               lines = (st + 100) / 100
+               return lines
+               
+           } else if (day == 1) {
+               start = d.monday_start;
+               end = d.monday_end;
+               st = Math.ceil((end - start) / 100) * 100;
+               console.log(st);
+               lines = (st + 100) / 100
+               return lines
+               
+           } else if (day == 2) {
+               start = d.tuesday_start;
+               end = d.tuesday_end;
+               st = Math.ceil((end - start) / 100) * 100;
+               console.log(st);
+               lines = (st + 100) / 100
+               return lines
+               
+           } else if (day == 3) {
+               start = d.wednesday_start;
+               end = d.wednesday_end;
+               st = Math.ceil((end - start) / 100) * 100;
+               console.log(st);
+               lines = (st + 100) / 100
+               return lines
+        }
+    }
+        
     },
 
     computed: {
         set: function () {
             today = new Date()
             this.ss = this.today.toDateString();
-        }
+        },
 
     },
     mounted: function () {
-        
+        this.getD();
       },
     created: function () {
         this.set();
@@ -49,7 +131,7 @@ Vue.component('date', {
   
 
 Vue.component('emp-item', {
-    props: ['emp'],
+    props: ['emp', 'lines'],
     template: `<div class="cv">
                 <h6>{{emp.first_name}}</h6>
                 <canvas v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" :id="'cv' + emp.id" class="canvas"  width="150" height="700"></canvas>
@@ -72,7 +154,13 @@ Vue.component('emp-item', {
             dragTR : false,
             dragBR : false,
             timeWorked: 0,
-            cv: ''
+            cv: '',
+            lines: 0
+        }
+    },
+    watch: {
+        lines: function () {
+            console.log('yes');
         }
     },
     created: function () {
@@ -85,13 +173,16 @@ Vue.component('emp-item', {
 
     },                
     methods: {
+        setLines: function () {
+            
+        },
         getVal: function () {
             this.cv = 'cv' + this.emp.id;
             this.canvas = document.getElementById(this.cv);
             this.ctx = this.canvas.getContext('2d');
             this.st = this.canvas.height;
-            
-            this.ic = (this.st / 24);
+            console.log(lines)
+            this.ic = (this.st / lines);
             this.rect = {
                 startX: 25,
                 startY: 100,
@@ -436,370 +527,4 @@ Vue.component('emp-item', {
     }
   })
   
- /******************************************************************************************************/ 
-  function setGraph(x) {
-  /*cv = "cv" + emp.id,
-  var canvas = document.getElementById(`${cv}`),
-  ctx = canvas.getContext('2d'),
-  rect = {},
-  drag = false,
-  mouseX,
-  mouseY,
-  startTime,
-  endTime,
-  closeEnough = 10,
-  st = canvas.height,
-  this.ic = (st / 24),
-  dragTL = dragBL = dragTR = dragBR = false;
-  
-  function init() {
-  canvas.addEventListener('mousedown', mouseDown, false);
-  canvas.addEventListener('mouseup', mouseUp, false);
-  canvas.addEventListener('mousemove', mouseMove, false);
-  
-  
-  rect = {
-      startX: 25,
-      startY: 100,
-      w: 100,
-      h: 200
-  }
-  }
-  
-  function getStartTime(time) {
-      if (time > 0 && time < this.ic) {
-          startTime = 0;
-          console.log("12AM");
-      }
-      else if (time >= this.ic && time < (this.ic * 2)) {
-          startTime = 1;
-          console.log('1AM');
-      }
-      else if (time >= (this.ic * 2) && time < (this.ic * 3)) {
-          startTime = 2;
-          console.log('2AM');
-      }
-      else if (time >= (this.ic * 3) && time < (this.ic * 4)) {
-          startTime = 3;
-          console.log('3AM');
-      }
-      else if (time >= (this.ic * 4) && time < (this.ic * 5)) {
-          startTime = 4;
-          console.log('4AM');
-      }
-      else if (time >= (this.ic * 5) && time < (this.ic * 6)) {
-          startTime = 5;
-          console.log('5AM');
-      }
-      else if (time >= (this.ic * 6) && time < (this.ic * 7)) {
-          startTime = 6;
-          console.log('6AM');
-      }
-      else if (time >= (this.ic * 7) && time < (this.ic * 8)) {
-          startTime = 7;
-          console.log('7AM');
-      }
-      else if (time >= (this.ic * 8) && time < (this.ic * 9)) {
-          startTime = 8;
-          console.log('8AM');
-      }
-      else if (time >= (this.ic * 9) && time < (this.ic * 10)) {
-          startTime = 9;
-          console.log('9AM');
-      }
-      else if (time >= (this.ic * 10) && time < (this.ic * 11)) {
-          startTime = 10;
-          console.log('10AM');
-      }
-      else if (time >= (this.ic * 11) && time < (this.ic * 12)) {
-          startTime = 11;
-          console.log('11AM');
-      }
-      else if (time >= (this.ic * 12) && time < (this.ic * 13)) {
-          startTime = 12;
-          console.log('12PM');
-      }
-      else if (time >= (this.ic * 13) && time < (this.ic * (this.ic * 14))) {
-          startTime = 13;
-          console.log('1PM');
-      }
-      else if (time >= (this.ic * 14) && time < (this.ic * 15)) {
-          startTime = 14;
-          console.log('2PM');
-      }
-      else if (time >= (this.ic * 15) && time < (this.ic * 16)) {
-          startTime = 15;
-          console.log('3PM');
-      }
-      else if (time >= (this.ic * 16) && time < (this.ic * 17)) {
-          startTime = 16;
-          console.log('4PM');
-      }
-      else if (time >= (this.ic * 17) && time < (this.ic * 18)) {
-          startTime = 17;
-          console.log('5PM');
-      }
-      else if (time >= (this.ic * 18) && time < (this.ic * 19)) {
-          startTime = 18;
-          console.log('6PM');
-      }
-      else if (time >= (this.ic * 19) && time < (this.ic * 20)) {
-          startTime = 19;
-          console.log('7PM');
-      }
-      else if (time >= (this.ic * 20) && time < (this.ic * 21)) {
-          startTime = 20;
-          console.log('8PM');
-      }
-      else if (time >= (this.ic * 21) && time < (this.ic * 22)) {
-          startTime = 21;
-          console.log('9PM');
-      }
-      else if (time >= (this.ic * 22) && time < (this.ic * 22)) {
-          startTime = 22;
-          console.log('10PM');
-      }
-      else if (time >= (this.ic * 23) && time < (this.ic * 24)) {
-          startTime = 23;
-          console.log('11PM');
-      }
-      else if (time >=  (this.ic * 24) && time < (this.ic * 25)) {
-          startTime = 24;
-          console.log('12AM');
-      }
-      else {
-          console.log('Time has Stopped');
-      }
-  } 
-  
-  function getEndTime(time) {
-      if (time > 0 && time < this.ic) {
-          endTime = 0;
-          console.log("12AM");
-      }
-      else if (time >= this.ic && time < (this.ic * 2)) {
-          endTime = 1;
-          console.log('1AM');
-      }
-      else if (time >= (this.ic * 2) && time < (this.ic * 3)) {
-          endTime = 2;
-          console.log('2AM');
-      }
-      else if (time >= (this.ic * 3) && time < (this.ic * 4)) {
-          endTime = 3;
-          console.log('3AM');
-      }
-      else if (time >= (this.ic * 4) && time < (this.ic * 5)) {
-          endTime = 4;
-          console.log('4AM');
-      }
-      else if (time >= (this.ic * 5) && time < (this.ic * 6)) {
-          endTime = 5;
-          console.log('5AM');
-      }
-      else if (time >= (this.ic * 6) && time < (this.ic * 7)) {
-          endTime = 6;
-          console.log('6AM');
-      }
-      else if (time >= (this.ic * 7) && time < (this.ic * 8)) {
-          endTime = 7;
-          console.log('7AM');
-      }
-      else if (time >= (this.ic * 8) && time < (this.ic * 9)) {
-          endTime = 8;
-          console.log('8AM');
-      }
-      else if (time >= (this.ic * 9) && time < (this.ic * 10)) {
-          endTime = 9;
-          console.log('9AM');
-      }
-      else if (time >= (this.ic * 10) && time < (this.ic * 11)) {
-          endTime = 10;
-          console.log('10AM');
-      }
-      else if (time >= (this.ic * 11) && time < (this.ic * 12)) {
-          endTime = 11;
-          console.log('11AM');
-      }
-      else if (time >= (this.ic * 12) && time < (this.ic * 13)) {
-          endTime = 12;
-          console.log('12PM');
-      }
-      else if (time >= (this.ic * 13) && time < (this.ic * 14)) {
-          endTime = 13;
-          console.log('1PM');
-      }
-      else if (time >= (this.ic * 14) && time < (this.ic * 15)) {
-          endTime = 14;
-          console.log('2PM');
-      }
-      else if (time >= (this.ic * 15) && time < (this.ic * 16)) {
-          endTime = 15;
-          console.log('3PM');
-      }
-      else if (time >= (this.ic * 16) && time < (this.ic * 17)) {
-          endTime = 16;
-          console.log('4PM');
-      }
-      else if (time >= (this.ic * 17) && time < (this.ic * 18)) {
-          endTime = 17;
-          console.log('5PM');
-      }
-      else if (time >= (this.ic * 18) && time < (this.ic * 19)) {
-          endTime = 18;
-          console.log('6PM');
-      }
-      else if (time >= (this.ic * 19) && time < (this.ic * 20)) {
-          endTime = 19;
-          console.log('7PM');
-      }
-      else if (time >= (this.ic * 20) && time < (this.ic * 21)) {
-          endTime = 20;
-          console.log('8PM');
-      }
-      else if (time >= (this.ic * 21) && time < (this.ic * 22)) {
-          endTime = 21;
-          console.log('9PM');
-      }
-      else if (time >= (this.ic * 22) && time < (this.ic * 22)) {
-          endTime = 22;
-          console.log('10PM');
-      }
-      else if (time >= (this.ic * 23) && time < (this.ic * 24)) {
-          endTime = 23;
-          console.log('11PM');
-      }
-      else if (time >=  (this.ic * 24) && time < (this.ic * 25)) {
-          endTime = 24;
-          console.log('12AM');
-      }
-      else {
-          console.log('Time has Stopped');
-      }
-  }
-  
-  function calcTime(start, end) {
-      console.log("Time worked: " + (end - start));
-  
-  }
-  
-  
-  function mouseDown(e) {
-  mouseX = e.pageX - this.offsetLeft;
-  mouseY = e.pageY - this.offsetTop;
-    // if there isn't a rect yet
-  if (rect.w === undefined) {
-      rect.startX = mouseY;
-      rect.startY = mouseX;
-      dragBR = true;
-  }
-  
-  // if there is, check which corner
-  //   (if any) was clicked
-  //
-  // 4 cases:
-  // 1. top left
-  else if (checkCloseEnough(mouseX, rect.startX + rect.w/2) && checkCloseEnough(mouseY, rect.startY)) {
-      dragTL = true;
-  }
-  // 2. top right
-  //else if (checkCloseEnough(mouseX, rect.startX + rect.w) && checkCloseEnough(mouseY, rect.startY)) {
-  //    dragTR = true;
-  
-  //}
-  // 3. bottom left
-  else if (checkCloseEnough(mouseX, rect.startX + rect.w/2) && checkCloseEnough(mouseY, rect.startY + rect.h)) {
-      dragBR = true;
-  
-  }
-  // 4. bottom right
-  //else if (checkCloseEnough(mouseX, rect.startX + rect.w) && checkCloseEnough(mouseY, rect.startY + rect.h)) {
-  //    dragBR = true;
-  
-  //}
-  // (5.) none of them
-  else {
-      // handle not resizing
-  }
-  
-  
-  
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  draw();
-  
-  }
-  
-  function checkCloseEnough(p1, p2) {
-  return Math.abs(p1 - p2) < closeEnough;
-  }
-  
-  function mouseUp() {
-  dragTL = dragTR = dragBL = dragBR = false;
-  getStartTime(rect.startY);
-  getEndTime(rect.startY + rect.h);
-  calcTime(startTime, endTime);
-  console.log("Top " +  startTime);
-  console.log("Bottom " +  (endTime));
-  }
-  
-  function mouseMove(e) {
-  mouseX = e.pageX - this.offsetLeft;
-  mouseY = e.pageY - this.offsetTop;
-  if (dragTL) {
-      //rect.w += rect.startX - mouseX;
-      rect.h += rect.startY - mouseY;
-      //rect.startX = mouseX;
-      rect.startY = mouseY;
-  } //else if (dragTR) {
-      //rect.w = Math.abs(rect.startX - mouseX);
-      //rect.h += rect.startY - mouseY;
-      //rect.startY = mouseY;
-  //} //else if (dragBL) {
-      //rect.w += rect.startX - mouseX;
-      //rect.h = Math.abs(rect.startY - mouseY);
-      //rect.startX = mouseX;
-  //} 
-  else if (dragBR) {
-      //rect.w = Math.abs(rect.startX - mouseX);
-      rect.h = Math.abs(rect.startY - mouseY);
-  }
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  draw();
-  }
-  st = canvas.height;
-  this.ic = (st / 24);
-  function draw() {
-  for (let  i = 0; i < st; i+=this.ic) {
-      ctx.beginPath();
-      ctx.moveTo(0, i);
-      ctx.lineTo(500, i);
-      ctx.stroke(); }
-  ctx.fillStyle = "#222222";
-  ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
-  drawHandles();
-  }
-  
-  function drawCircle(x, y, radius) {
-  ctx.fillStyle = "#FF0000";
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, 2 * Math.PI);
-  ctx.fill();
-  }
-  
-  function drawHandles() {
-  drawCircle(rect.startX + rect.w/2, rect.startY, closeEnough); //top left corner
-  //drawCircle(rect.startX + rect.w, rect.startY, closeEnough);
-  //drawCircle(rect.startX + rect.w, rect.startY + rect.h, closeEnough);
-  drawCircle(rect.startX + rect.w/2, rect.startY + rect.h, closeEnough);
-  }*/
-  
-  
-  
-  init();
-      
-  }
-/*var end = sf[sf.length-1] + 1
-console.log(sf[sf.length])
-for(i=sf[0]; i < end;i++){
-    setGraph("cv" + i)
-  }*/
+ 
