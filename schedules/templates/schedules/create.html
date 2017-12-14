@@ -10,24 +10,9 @@
 
 <div id="app-7">
 
-    <date></date>
-
-      <!--
-        Now we provide each emp-item with the emp object
-        it's representing, so that its content can be dynamic.
-        We also need to provide each component with a "key",
-        which will be explained later.
-      -->
-
-      <emp-item
-        v-for="item in empList"
-        v-bind:emp="item"
-        v-bind:key="item.id"
-        >
-      </emps-item>
-
+    <app></app>
     
-  </div>
+</div>
   
 <script>
     var emps_length = {{emps_length|safe}};

@@ -1,129 +1,9 @@
 Vue.config.devtools = true
 
+var bus = new Vue()
+
 Vue.component('date', {
-    template: `<div class="b">
-               <button class="c" v-on:click="previousDay">&lsaquo;</button>
-               <h1>{{ this.ss }}</h1>
-               <button class="c" v-on:click="nextDay">&rsaquo;</button>
-               </div>`,
-    data: function() {
-        return {
-        today : new Date,
-        tomorrow : new Date(),
-        ss: '',
-        start: 0,
-        end: 0,
-        st: 0,
-        lines: 0,
-        day: 0
-        }
-    },
-    methods: {
-        nextDay: function () {
-            this.tomorrow.setDate(this.today.getDate()+1);
-            this.today.setDate(this.tomorrow.getDate());
-            this.ss =  this.tomorrow.toDateString();
-        },
-        previousDay: function () {
-            this.tomorrow.setDate(this.today.getDate()-1);
-            this.today.setDate(this.tomorrow.getDate());
-            this.ss =  this.tomorrow.toDateString();
-        },
-        set: function () {
-            this.ss = this.today.toDateString();
-        },
-        getD: function () {
-            day = this.today.getDay();
-            if (day == 0) {
-                start = d.sunday_start;
-                end = d.sunday_end;
-                st = Math.ceil((end - start) / 100) * 100;
-                console.log(st);
-                lines = (st + 100) / 100
-                return lines
-                
-            } else if (day == 1) {
-                start = d.monday_start;
-                end = d.monday_end;
-                st = Math.ceil((end - start) / 100) * 100;
-                console.log(st);
-                lines = (st + 100) / 100
-                return lines
-                
-            } else if (day == 2) {
-                start = d.tuesday_start;
-                end = d.tuesday_end;
-                st = Math.ceil((end - start) / 100) * 100;
-                console.log(st);
-                lines = (st + 100) / 100
-                return lines
-                
-            } else if (day == 3) {
-                start = d.wednesday_start;
-                end = d.wednesday_end;
-                st = Math.ceil((end - start) / 100) * 100;
-                console.log(st);
-                lines = (st + 100) / 100
-                return lines
-                
-            }
-            
-
-        }
-    },
-    watch: {
-        ss: function() {
-           console.log('yes');
-           day = this.today.getDay();
-           if (day == 0) {
-               start = d.sunday_start;
-               end = d.sunday_end;
-               st = Math.ceil((end - start) / 100) * 100;
-               console.log(st);
-               lines = (st + 100) / 100
-               return lines
-               
-           } else if (day == 1) {
-               start = d.monday_start;
-               end = d.monday_end;
-               st = Math.ceil((end - start) / 100) * 100;
-               console.log(st);
-               lines = (st + 100) / 100
-               return lines
-               
-           } else if (day == 2) {
-               start = d.tuesday_start;
-               end = d.tuesday_end;
-               st = Math.ceil((end - start) / 100) * 100;
-               console.log(st);
-               lines = (st + 100) / 100
-               return lines
-               
-           } else if (day == 3) {
-               start = d.wednesday_start;
-               end = d.wednesday_end;
-               st = Math.ceil((end - start) / 100) * 100;
-               console.log(st);
-               lines = (st + 100) / 100
-               return lines
-        }
-    }
-        
-    },
-
-    computed: {
-        set: function () {
-            today = new Date()
-            this.ss = this.today.toDateString();
-        },
-
-    },
-    mounted: function () {
-        this.getD();
-      },
-    created: function () {
-        this.set();
-    }
+   
   
   
   })
@@ -133,8 +13,8 @@ Vue.component('date', {
 Vue.component('emp-item', {
     props: ['emp', 'lines'],
     template: `<div class="cv">
-                <h6>{{emp.first_name}}</h6>
-                <canvas v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" :id="'cv' + emp.id" class="canvas"  width="150" height="700"></canvas>
+                <h6>{{emp.first_name}} {{ lines }}</h6>
+                <canvas  v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" :id="'cv' + emp.id" class="canvas"  width="150" height="700"></canvas>
                 
                 </div>`,
     data: function() {
@@ -155,12 +35,19 @@ Vue.component('emp-item', {
             dragBR : false,
             timeWorked: 0,
             cv: '',
-            lines: 0
+            ln: 0
+            
+            
+
+            
         }
     },
     watch: {
         lines: function () {
-            console.log('yes');
+            this. ln = this.lines;
+            this.getVal(this.ln);
+            this.draw();
+            console.log('watch: ' + this.ln);
         }
     },
     created: function () {
@@ -168,21 +55,23 @@ Vue.component('emp-item', {
 
     },
     mounted: function () {
-        this.getVal();
+        this.getVal(this.lines);
         this.draw();
+        
+        
+
 
     },                
     methods: {
-        setLines: function () {
-            
-        },
-        getVal: function () {
+        getVal: function (x) {
+            console.log(x)
             this.cv = 'cv' + this.emp.id;
             this.canvas = document.getElementById(this.cv);
             this.ctx = this.canvas.getContext('2d');
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.st = this.canvas.height;
-            console.log(lines)
-            this.ic = (this.st / lines);
+            console.log("GET VAL : " + x)
+            this.ic = (this.st / x);
             this.rect = {
                 startX: 25,
                 startY: 100,
@@ -198,9 +87,9 @@ Vue.component('emp-item', {
                 this.ctx.moveTo(0, i);
                 this.ctx.lineTo(500, i);
                 this.ctx.stroke(); }
-            this.ctx.fillStyle = "#222222";
-            this.ctx.fillRect(this.rect.startX, this.rect.startY, this.rect.w, this.rect.h);
-            this.drawHandles();
+                this.ctx.fillStyle = "#222222";
+                this.ctx.fillRect(this.rect.startX, this.rect.startY, this.rect.w, this.rect.h);
+                this.drawHandles();
         },
         drawHandles: function () {
             this.drawCircle(this.rect.startX + this.rect.w/2, this.rect.startY, this.closeEnough); //top left corner
@@ -522,9 +411,186 @@ Vue.component('emp-item', {
   
   var app7 = new Vue({
     el: '#app-7',
-    data: {
-      empList: l,
+    template: `<div class="b">
+                    <div>
+                        <button class="c" v-on:click="previousDay">&lsaquo;</button>
+                        <h1 >{{ this.ss }}</h1>
+                        <button class="c" v-on:click="nextDay">&rsaquo;</button>
+                    <div>
+                    <emp-item
+                    v-for="item in empList"
+                    v-bind:emp="item"
+                    v-bind:key="item.id"
+                    v-bind:lines="lines">
+                    </emps-item>
+                    </div>`,
+    data: function() {
+    return {
+    empList : l,
+    today : new Date,
+    tomorrow : new Date(),
+    ss: '',
+    start: 0,
+    end: 0,
+    st: 0,
+    lines: 0,
+    day: 0
     }
-  })
-  
- 
+    },
+    methods: {
+    nextDay: function () {
+    this.tomorrow.setDate(this.today.getDate()+1);
+    this.today.setDate(this.tomorrow.getDate());
+    this.ss =  this.today.toDateString();
+    },
+    previousDay: function () {
+    this.tomorrow.setDate(this.today.getDate()-1);
+    this.today.setDate(this.tomorrow.getDate());
+    this.ss =  this.today.toDateString();
+    },
+    set: function () {
+    this.ss = this.today.toDateString();
+    },
+    getD: function () {
+    day = this.today.getDay();
+    if (day == 0) {
+        start = d.sunday_start;
+        end = d.sunday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        return this.lines;
+        
+    } else if (day == 1) {
+        start = d.monday_start;
+        end = d.monday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        return this.lines;
+        
+    } else if (day == 2) {
+        start = d.tuesday_start;
+        end = d.tuesday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        return this.lines;
+        
+    } else if (day == 3) {
+        start = d.wednesday_start;
+        end = d.wednesday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        return this.lines;
+        
+    } else if (day == 4) {
+        start = d.thursday_start;
+        end = d.thursday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        return this.lines;
+        
+    } else if (day == 5) {
+        start = d.friday_start;
+        end = d.friday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        return this.lines;
+        
+    } else if (day == 6) {
+        start = d.saturday_start;
+        end = d.saturday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        return this.lines;
+        
+    } else {
+        return this.lines = 24;
+    }
+    
+
+    }
+    },
+    watch: {
+    lines: function () {
+
+    },
+    ss: function() {
+
+    day = this.today.getDay();
+    if (day == 0) {
+        start = d.sunday_start;
+        end = d.sunday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100
+        console.log("ss " + this.lines);
+        return this.lines
+        
+    } else if (day == 1) {
+        start = d.monday_start;
+        end = d.monday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100
+        console.log("ss " + this.lines);
+        return this.lines
+        
+    } else if (day == 2) {
+        start = d.tuesday_start;
+        end = d.tuesday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100
+        console.log("ss " + this.lines);
+        return this.lines
+        
+    } else if (day == 3) {
+        start = d.wednesday_start;
+        end = d.wednesday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100
+        console.log("ss " + this.lines);
+        return this.lines
+    } else if (day == 4) {
+        start = d.thursday_start;
+        end = d.thursday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        console.log("ss " + this.lines);
+        
+        
+    } else if (day == 5) {
+        start = d.friday_start;
+        end = d.friday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        console.log("ss " + this.lines);
+        return this.lines;
+        
+    } else if (day == 6) {
+        start = d.saturday_start;
+        end = d.saturday_end;
+        st = Math.ceil((end - start) / 100) * 100;
+        this.lines = (st + 100) / 100;
+        console.log("ss " + this.lines);
+        return this.lines;
+        
+    } else {
+        return lines = 24;
+    }
+    }
+
+    },
+
+    computed: {
+    set: function () {
+    today = new Date()
+    this.ss = this.today.toDateString();
+    },
+
+    },
+    mounted: function () {
+    this.getD();
+    },
+    created: function () {
+    this.set();
+    }
+    })
+    
+    
