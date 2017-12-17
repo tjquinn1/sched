@@ -11,11 +11,11 @@ Vue.component('date', {
   
 
 Vue.component('emp-item', {
-    props: ['emp', 'lines'],
+    props: ['emp', 'lines', 'start', 'end'],
     template: `<div class="cv">
                 <h6>{{emp.first_name}} {{ lines }}</h6>
                 <canvas  v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" :id="'cv' + emp.id" class="canvas"  width="150" height="700"></canvas>
-                
+                <canvas  class="back" :id="'back' + emp.id"   width="150" height="700"></canvas>
                 </div>`,
     data: function() {
         return {
@@ -46,8 +46,11 @@ Vue.component('emp-item', {
         lines: function () {
             this. ln = this.lines;
             this.getVal(this.ln);
+
             this.draw();
-            console.log('watch: ' + this.ln);
+            this.getBack(this.lines);
+            this.drawBack();
+            this.timeCalc(this.start, this.end, this.ln, this.ic);
         }
     },
     created: function () {
@@ -57,21 +60,111 @@ Vue.component('emp-item', {
     mounted: function () {
         this.getVal(this.lines);
         this.draw();
+        this.getBack(this.lines);
+        this.drawBack();
+        
         
         
 
 
     },                
     methods: {
+        timeCalc: function(start, end, lines, inc) {
+            console.log("******************************************");
+            console.log("Actual Start: " + start);
+            var time_start = (start - 100);
+            console.log("Start: " + time_start);
+            console.log("End: " + (end + 100));
+            console.log("Lines: " + lines);
+            console.log("Inc: " + inc);
+            console.log("Start Y: " + this.rect.startY);
+            console.log("End Y: " + (this.rect.startY + this.rect.h));
+            console.log("Canvas Height: " + this.canvas.height);
+            
+            var tot_min = (60 * lines);
+            console.log("Total mins: " + tot_min);
+            var mins_per_y =  (tot_min / 700);
+            console.log("Mins / Y: " + mins_per_y);
+            var rec_times_y = (mins_per_y * this.rect.startY);
+            console.log("Rect x Y: " + rec_times_y);
+            var rty_div_60 = (rec_times_y / 60);
+            console.log("RTY/60: " + rty_div_60);
+            var rty_trunc = Math.trunc(rty_div_60);
+            console.log("TRUNC RTY: " + rty_trunc);
+            var rty_trunc_times_hund = (rty_trunc * 100);
+            console.log("TRUNC RTY X 100: " + rty_trunc_times_hund);
+            var time_start_plus_hund = time_start + rty_trunc_times_hund
+            console.log("Time Start + Hund: " + time_start_plus_hund);
+            var remain = rty_div_60 - rty_trunc;
+            console.log("REMAINDER: " + remain);
+            var remain_mins = remain * 60
+            console.log("REMAINDER MINS: " + remain_mins);
+            var rounded_remain = parseInt(remain_mins.toPrecision(2));
+            console.log("Rounded Remainder: " + rounded_remain);
+            var num_string = time_start_plus_hund.toString().substr(2,2);
+            console.log("SPLIT STRING: " + num_string);
+            var string_to_num = parseInt(num_string);
+            var mins_add = string_to_num + rounded_remain;
+            console.log("Added mins: " + mins_add);
+            if (mins_add >= 60) {
+                var time_hund_round = Math.round(time_start_plus_hund/100) * 100;
+                console.log("TIMES HUND ROUND: " + time_hund_round);
+                var div_mins = mins_add / 60;
+                console.log("Divided Mins: " + div_mins);
+                var div_mins_trunc = Math.trunc(div_mins);
+                console.log("TRUNC DIV MINS: " + div_mins_trunc);
+                var div_trunc_times_hund = div_mins_trunc * 100;
+                var hrs_add_to_tot = div_trunc_times_hund + time_hund_round
+                console.log("NEW Hours: " + hrs_add_to_tot);
+                var remain_mns = div_mins - div_mins_trunc;
+                var mns_to_add = remain_mns * 60;
+                var mns_new = hrs_add_to_tot + mns_to_add;
+                console.log("New Time: " + mns_new);
+
+            }
+
+            /*var m = ((x / 60) * 100);
+            
+            var u = (x / 60);
+            console.log("U: " + u);
+            var r = Math.trunc(u);
+            console.log("R: " + r);
+            var pres = (u - r);
+            console.log("PRES: " + pres);
+            var rd = (r * 100);
+            console.log("RD: " + rd);
+            var p = parseInt(rd.toPrecision(2));
+            console.log("P: " + p);
+            var hund = pres * 60;
+            console.log("HUND: " + hund);
+            var ed = (s + p);
+            var ed1 = r  * 100;
+            time = ed + ed1 + hund;
+            
+
+            
+            
+            
+            console.log("Rect Start: " + this.rect.startY);
+            console.log("X: " + x);
+            //console.log("Calc time: " + x);
+            if (x > inc) {
+            console.log("Mod: " + (rd.toPrecision(2)));
+            console.log("Calc Start Time 1: " + time);
+            } else {
+            console.log("Calc Start Time: " + time);
+            }*/
+
+        },
         getVal: function (x) {
-            console.log(x)
             this.cv = 'cv' + this.emp.id;
             this.canvas = document.getElementById(this.cv);
             this.ctx = this.canvas.getContext('2d');
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.st = this.canvas.height;
-            console.log("GET VAL : " + x)
+            console.log("GET VAL : " + x);
             this.ic = (this.st / x);
+            console.log("IC: " + this.ic);
             this.rect = {
                 startX: 25,
                 startY: 100,
@@ -79,8 +172,6 @@ Vue.component('emp-item', {
                 h: 300,
             }
         },
-        
-
         draw: function () {
             for (let  i = 0; i < this.st; i+=this.ic) {
                 this.ctx.beginPath();
@@ -90,6 +181,31 @@ Vue.component('emp-item', {
                 this.ctx.fillStyle = "#222222";
                 this.ctx.fillRect(this.rect.startX, this.rect.startY, this.rect.w, this.rect.h);
                 this.drawHandles();
+        },
+        getBack: function (x) {
+            this.back = 'back' + this.emp.id;
+            this.canvas1 = document.getElementById(this.back);
+            this.ctx1 = this.canvas1.getContext('2d');
+            this.ctx1.clearRect(0, 0, this.canvas1.width, this.canvas1.height);
+            this.st = this.canvas1.height;
+            console.log("GET VAL : " + x);
+            this.ic = (this.st / x);
+            console.log("IC: " + this.ic);
+        },
+        
+
+        drawBack: function () {
+        var qtr = (this.ic/4);
+        console.log("QTR: " + qtr);
+
+            for (let  i = 0; i < this.st; i+= qtr) {
+                this.ctx1.beginPath();
+                this.ctx1.moveTo(0, i);
+                this.ctx1.lineTo(500, i);
+                this.ctx1.stroke(); }
+                this.ctx1.strokeStyle = "#42f4dc";
+                
+                
         },
         drawHandles: function () {
             this.drawCircle(this.rect.startX + this.rect.w/2, this.rect.startY, this.closeEnough); //top left corner
@@ -182,6 +298,7 @@ Vue.component('emp-item', {
             this.dragTR = false;
             this.dragBL = false; 
             this.dragBR = false;
+            this.timeCalc(this.start, this.end, this.ln, this.ic);
             this.getStartTime(this.rect.startY);
             this.getEndTime(this.rect.startY + this.rect.h);
             this.calcTime(this.startTime, this.endTime);
@@ -421,7 +538,9 @@ Vue.component('emp-item', {
                     v-for="item in empList"
                     v-bind:emp="item"
                     v-bind:key="item.id"
-                    v-bind:lines="lines">
+                    v-bind:lines="lines"
+                    v-bind:start="start"
+                    v-bind:end="end">
                     </emps-item>
                     </div>`,
     data: function() {
@@ -454,54 +573,53 @@ Vue.component('emp-item', {
     getD: function () {
     day = this.today.getDay();
     if (day == 0) {
-        start = d.sunday_start;
-        end = d.sunday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.sunday_start;
+        this.end = d.sunday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 100) / 100;
         return this.lines;
         
     } else if (day == 1) {
-        start = d.monday_start;
-        end = d.monday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.monday_start;
+        this.end = d.monday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 100) / 100;
         return this.lines;
         
     } else if (day == 2) {
-        start = d.tuesday_start;
-        end = d.tuesday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.tuesday_start;
+        this.end = d.tuesday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 100) / 100;
         return this.lines;
         
     } else if (day == 3) {
-        start = d.wednesday_start;
-        end = d.wednesday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.wednesday_start;
+        this.end = d.wednesday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 100) / 100;
         return this.lines;
         
     } else if (day == 4) {
-        start = d.thursday_start;
-        end = d.thursday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.thursday_start;
+        this.end = d.thursday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 100) / 100;
         return this.lines;
         
     } else if (day == 5) {
-        start = d.friday_start;
-        end = d.friday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.friday_start;
+        this.end = d.friday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100;
         return this.lines;
         
     } else if (day == 6) {
-        start = d.saturday_start;
-        end = d.saturday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
-        return this.lines;
-        
+        this.start = d.saturday_start;
+        this.end = d.saturday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 100) / 100;
+        return this.line
     } else {
         return this.lines = 24;
     }
@@ -517,57 +635,57 @@ Vue.component('emp-item', {
 
     day = this.today.getDay();
     if (day == 0) {
-        start = d.sunday_start;
-        end = d.sunday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100
+        this.start = d.sunday_start;
+        this.end = d.sunday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100
         console.log("ss " + this.lines);
         return this.lines
         
     } else if (day == 1) {
-        start = d.monday_start;
-        end = d.monday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100
+        this.start = d.monday_start;
+        this.end = d.monday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100
         console.log("ss " + this.lines);
         return this.lines
         
     } else if (day == 2) {
-        start = d.tuesday_start;
-        end = d.tuesday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100
+        this.start = d.tuesday_start;
+        this.end = d.tuesday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100
         console.log("ss " + this.lines);
         return this.lines
         
     } else if (day == 3) {
-        start = d.wednesday_start;
-        end = d.wednesday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100
+        this.start = d.wednesday_start;
+        this.end = d.wednesday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100
         console.log("ss " + this.lines);
         return this.lines
     } else if (day == 4) {
-        start = d.thursday_start;
-        end = d.thursday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.thursday_start;
+        this.end = d.thursday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100;
         console.log("ss " + this.lines);
         
         
     } else if (day == 5) {
-        start = d.friday_start;
-        end = d.friday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.friday_start;
+        this.end = d.friday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100;
         console.log("ss " + this.lines);
         return this.lines;
         
     } else if (day == 6) {
-        start = d.saturday_start;
-        end = d.saturday_end;
-        st = Math.ceil((end - start) / 100) * 100;
-        this.lines = (st + 100) / 100;
+        this.start = d.saturday_start;
+        this.end = d.saturday_end;
+        this.st = Math.ceil((this.end - this.start) / 100) * 100;
+        this.lines = (this.st + 200) / 100;
         console.log("ss " + this.lines);
         return this.lines;
         

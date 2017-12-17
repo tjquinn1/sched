@@ -1,6 +1,24 @@
-#canvas {
-    background-color:lightgray;
+
+canvas { position: absolute; }
+.cv {
+    display: inline-block;
+    width: 150px;
+    
+    
 }
+.canvas {
+    
+    
+    z-index: 1;
+}
+
+.back {
+   
+    
+    z-index: 0;
+    
+}
+
 .b {
     display: block;
     clear: left;
@@ -9,9 +27,7 @@
 .b a {
     display: inline;
 }
-.cv {
-    display: inline-block;
-  }
+
   .date {
     display: inline-block;
     float:left;
