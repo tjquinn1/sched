@@ -35,7 +35,9 @@ Vue.component('emp-item', {
             dragBR : false,
             timeWorked: 0,
             cv: '',
-            ln: 0
+            ln: 0,
+            calcStartTime: 0,
+            calcEndTime: 0
             
             
 
@@ -50,7 +52,8 @@ Vue.component('emp-item', {
             this.draw();
             this.getBack(this.lines);
             this.drawBack();
-            this.timeCalc(this.start, this.end, this.ln, this.ic);
+            this.timeStartCalc(this.start, this.end, this.ln, this.ic);
+            this.timeEndCalc(this.start, this.end, this.ln, this.ic);
         }
     },
     created: function () {
@@ -69,7 +72,7 @@ Vue.component('emp-item', {
 
     },                
     methods: {
-        timeCalc: function(start, end, lines, inc) {
+        timeStartCalc: function(start, end, lines, inc) {
             console.log("******************************************");
             console.log("Actual Start: " + start);
             var time_start = (start - 100);
@@ -95,17 +98,33 @@ Vue.component('emp-item', {
             console.log("TRUNC RTY X 100: " + rty_trunc_times_hund);
             var time_start_plus_hund = time_start + rty_trunc_times_hund
             console.log("Time Start + Hund: " + time_start_plus_hund);
+            
+            function getlength(number) {
+                var len_time = number.toString().length;
+                return len_time
+            }
+            if ( getlength(time_start_plus_hund) === 3) {
+                var num_string = time_start_plus_hund.toString().substr(1,2);
+                console.log("SPLIT STRING: " + num_string);
+            } else {
+                var num_string = time_start_plus_hund.toString().substr(2,2);
+                console.log("SPLIT STRING: " + num_string);
+
+            }
+
+            console.log(getlength(time_start_plus_hund));
             var remain = rty_div_60 - rty_trunc;
             console.log("REMAINDER: " + remain);
             var remain_mins = remain * 60
             console.log("REMAINDER MINS: " + remain_mins);
             var rounded_remain = parseInt(remain_mins.toPrecision(2));
             console.log("Rounded Remainder: " + rounded_remain);
-            var num_string = time_start_plus_hund.toString().substr(2,2);
-            console.log("SPLIT STRING: " + num_string);
+            
+            
             var string_to_num = parseInt(num_string);
             var mins_add = string_to_num + rounded_remain;
             console.log("Added mins: " + mins_add);
+            
             if (mins_add >= 60) {
                 var time_hund_round = Math.round(time_start_plus_hund/100) * 100;
                 console.log("TIMES HUND ROUND: " + time_hund_round);
@@ -118,42 +137,87 @@ Vue.component('emp-item', {
                 console.log("NEW Hours: " + hrs_add_to_tot);
                 var remain_mns = div_mins - div_mins_trunc;
                 var mns_to_add = remain_mns * 60;
-                var mns_new = hrs_add_to_tot + mns_to_add;
-                console.log("New Time: " + mns_new);
+                this.calcStartTime = hrs_add_to_tot + mns_to_add;
+                console.log("New Time 1: " + this.calcStartTime);
+
+            } else {
+                this.calcStartTime = rounded_remain+ time_start_plus_hund;
+                console.log("New TIme: " + this.calcStartTime);
+            }
+
+        },
+        timeEndCalc: function(start, end, lines, inc) {
+            console.log("******************************************");
+            console.log("Actual Start: " + start);
+            var time_start = (start - 100);
+            console.log("Start: " + time_start);
+            console.log("End: " + (end + 100));
+            console.log("Lines: " + lines);
+            console.log("Inc: " + inc);
+            console.log("Start Y: " + this.rect.startY);
+            console.log("End Y: " + (this.rect.startY + this.rect.h));
+            console.log("Canvas Height: " + this.canvas.height);
+            
+            var tot_min = (60 * lines);
+            console.log("Total mins: " + tot_min);
+            var mins_per_y =  (tot_min / 700);
+            console.log("Mins / Y: " + mins_per_y);
+            var rec_times_y = (mins_per_y * (this.rect.startY + this.rect.h));
+            console.log("Rect x Y: " + rec_times_y);
+            var rty_div_60 = (rec_times_y / 60);
+            console.log("RTY/60: " + rty_div_60);
+            var rty_trunc = Math.trunc(rty_div_60);
+            console.log("TRUNC RTY: " + rty_trunc);
+            var rty_trunc_times_hund = (rty_trunc * 100);
+            console.log("TRUNC RTY X 100: " + rty_trunc_times_hund);
+            var time_start_plus_hund = time_start + rty_trunc_times_hund
+            console.log("Time Start + Hund: " + time_start_plus_hund);
+            
+            function getlength(number) {
+                var len_time = number.toString().length;
+                return len_time
+            }
+            if ( getlength(time_start_plus_hund) === 3) {
+                var num_string = time_start_plus_hund.toString().substr(1,2);
+                console.log("SPLIT STRING: " + num_string);
+            } else {
+                var num_string = time_start_plus_hund.toString().substr(2,2);
+                console.log("SPLIT STRING: " + num_string);
 
             }
 
-            /*var m = ((x / 60) * 100);
+            console.log(getlength(time_start_plus_hund));
+            var remain = rty_div_60 - rty_trunc;
+            console.log("REMAINDER: " + remain);
+            var remain_mins = remain * 60
+            console.log("REMAINDER MINS: " + remain_mins);
+            var rounded_remain = parseInt(remain_mins.toPrecision(2));
+            console.log("Rounded Remainder: " + rounded_remain);
             
-            var u = (x / 60);
-            console.log("U: " + u);
-            var r = Math.trunc(u);
-            console.log("R: " + r);
-            var pres = (u - r);
-            console.log("PRES: " + pres);
-            var rd = (r * 100);
-            console.log("RD: " + rd);
-            var p = parseInt(rd.toPrecision(2));
-            console.log("P: " + p);
-            var hund = pres * 60;
-            console.log("HUND: " + hund);
-            var ed = (s + p);
-            var ed1 = r  * 100;
-            time = ed + ed1 + hund;
             
+            var string_to_num = parseInt(num_string);
+            var mins_add = string_to_num + rounded_remain;
+            console.log("Added mins: " + mins_add);
+            
+            if (mins_add >= 60) {
+                var time_hund_round = Math.round(time_start_plus_hund/100) * 100;
+                console.log("TIMES HUND ROUND: " + time_hund_round);
+                var div_mins = mins_add / 60;
+                console.log("Divided Mins: " + div_mins);
+                var div_mins_trunc = Math.trunc(div_mins);
+                console.log("TRUNC DIV MINS: " + div_mins_trunc);
+                var div_trunc_times_hund = div_mins_trunc * 100;
+                var hrs_add_to_tot = div_trunc_times_hund + time_hund_round
+                console.log("NEW Hours: " + hrs_add_to_tot);
+                var remain_mns = div_mins - div_mins_trunc;
+                var mns_to_add = remain_mns * 60;
+                this.calcEndTime = hrs_add_to_tot + mns_to_add;
+                console.log("New Time End 1: " + this.calcEndTime);
 
-            
-            
-            
-            console.log("Rect Start: " + this.rect.startY);
-            console.log("X: " + x);
-            //console.log("Calc time: " + x);
-            if (x > inc) {
-            console.log("Mod: " + (rd.toPrecision(2)));
-            console.log("Calc Start Time 1: " + time);
             } else {
-            console.log("Calc Start Time: " + time);
-            }*/
+                this.calcEndTime = rounded_remain+ time_start_plus_hund;
+                console.log("New TIme End" + this.calcEndTime);
+            }
 
         },
         getVal: function (x) {
@@ -298,10 +362,11 @@ Vue.component('emp-item', {
             this.dragTR = false;
             this.dragBL = false; 
             this.dragBR = false;
-            this.timeCalc(this.start, this.end, this.ln, this.ic);
+            this.timeStartCalc(this.start, this.end, this.ln, this.ic);
+            this.timeEndCalc(this.start, this.end, this.ln, this.ic);
             this.getStartTime(this.rect.startY);
             this.getEndTime(this.rect.startY + this.rect.h);
-            this.calcTime(this.startTime, this.endTime);
+            //this.calcTime(this.startTime, this.endTime);
             console.log("Top " +  this.startTime);
             console.log("Bottom " +  (this.endTime));
         },
