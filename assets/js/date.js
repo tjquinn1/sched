@@ -13,7 +13,7 @@ Vue.component('date', {
 Vue.component('emp-item', {
     props: ['emp', 'lines', 'start', 'end'],
     template: `<div class="cv">
-                <h6>{{emp.first_name}} {{ lines }}</h6>
+                <h6>{{emp.first_name}} {{ this.timeWorked }}</h6>
                 <canvas  v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" :id="'cv' + emp.id" class="canvas"  width="150" height="700"></canvas>
                 <canvas  class="back" :id="'back' + emp.id"   width="150" height="700"></canvas>
                 </div>`,
@@ -220,6 +220,68 @@ Vue.component('emp-item', {
             }
 
         },
+        calcTime: function (start, end) {
+            
+            console.log(start);
+            console.log(end);
+            var start_string = start.toString();
+            if (start_string.length === 3) {
+                console.log("Three");
+                var split_start_hours_string = start.toString().slice(0,1);
+                var split_start_mins_string = start.toString().slice(1,3);
+            } else {
+                var split_start_hours_string = start.toString().slice(0,2);
+                var split_start_mins_string = start.toString().slice(2,4);
+            }
+            // Start hours
+            var split_start_hours_number = parseInt(split_start_hours_string);
+            console.log("SPLIT Start Hours: " + split_start_hours_number);
+            // Start Minutes 
+            var split_start_mins_number = parseInt(split_start_mins_string);
+            console.log("SPLIT Start Minutes: " + split_start_mins_number);
+            /*************End Hours********************* */
+            var end_string = end.toString();
+            if (end_string.length === 3) {
+                console.log("Three");
+                var split_end_hours_string = end.toString().slice(0,1);
+                var split_end_mins_string = end.toString().slice(1,3);
+            } else {
+                var split_end_hours_string = end.toString().slice(0,2);
+                var split_end_mins_string = end.toString().slice(2,4);
+            }
+            // End hours
+            
+            var split_end_hours_number = parseInt(split_end_hours_string);
+            console.log("SPLIT End Hours: " + split_end_hours_number);
+            //End Minutes
+            
+            var split_end_mins_number = parseInt(split_end_mins_string);
+            console.log("SPLIT End Minutes: " + split_end_mins_number);
+            
+            
+            if (split_end_mins_number < split_start_mins_number) {
+                split_end_mins_number = 60 + split_end_mins_number;
+                split_end_hours_number = split_end_hours_number - 1;
+            }
+            var hour_diff = split_end_hours_number - split_start_hours_number;
+            var mins_diff = split_end_mins_number - split_start_mins_number;
+            console.log("Hours diff: " + hour_diff);
+            console.log("Mins diff: " + mins_diff);
+            if ( mins_diff < 10) {
+                var mins_diff_string = mins_diff.toString();
+                var add_zero = "0" + mins_diff_string;
+                
+                var time_string = hour_diff.toString() + add_zero;
+                this.timeWorked = parseInt(time_string);
+                console.log("Time worked: " + this.timeWorked);
+                
+
+            } else {
+            var time_string = hour_diff.toString() + mins_diff.toString();
+            this.timeWorked = parseInt(time_string);
+            console.log("Time worked: " + this.timeWorked);
+            }            
+        },
         getVal: function (x) {
             this.cv = 'cv' + this.emp.id;
             this.canvas = document.getElementById(this.cv);
@@ -366,7 +428,7 @@ Vue.component('emp-item', {
             this.timeEndCalc(this.start, this.end, this.ln, this.ic);
             this.getStartTime(this.rect.startY);
             this.getEndTime(this.rect.startY + this.rect.h);
-            //this.calcTime(this.startTime, this.endTime);
+            this.calcTime(this.calcStartTime, this.calcEndTime);
             console.log("Top " +  this.startTime);
             console.log("Bottom " +  (this.endTime));
         },
@@ -474,10 +536,6 @@ Vue.component('emp-item', {
             else {
                 console.log('Time has Stopped');
             }
-        },
-        calcTime: function (start, end) {
-            this.timeWorked = end - start
-            console.log("Time worked: " + this.timeWorked);            
         },
         getStartTime: function (time) {
             if (time > 0 && time < this.ic) {
