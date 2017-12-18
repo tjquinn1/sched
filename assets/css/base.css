@@ -2,19 +2,13 @@
 canvas { position: absolute; }
 .cv {
     display: inline-block;
-    width: 150px;
-    
-    
+    width: 150px;  
 }
-.canvas {
-    
-    
+.canvas { 
     z-index: 1;
 }
 
-.back {
-   
-    
+.back { 
     z-index: 0;
     
 }
@@ -28,7 +22,7 @@ canvas { position: absolute; }
     display: inline;
 }
 
-  .date {
+.date {
     display: inline-block;
     float:left;
   }

@@ -54,6 +54,11 @@ Vue.component('emp-item', {
             this.drawBack();
             this.timeStartCalc(this.start, this.end, this.ln, this.ic);
             this.timeEndCalc(this.start, this.end, this.ln, this.ic);
+        },
+        start: function () {
+            this.calcTime(this.calcStartTime, this.calcEndTime);
+            this.timeStartCalc(this.start, this.end, this.ln, this.ic);
+            this.timeEndCalc(this.start, this.end, this.ln, this.ic);
         }
     },
     created: function () {
@@ -68,21 +73,14 @@ Vue.component('emp-item', {
         
         
         
+        
 
 
     },                
     methods: {
         timeStartCalc: function(start, end, lines, inc) {
             console.log("******************************************");
-            console.log("Actual Start: " + start);
             var time_start = (start - 100);
-            console.log("Start: " + time_start);
-            console.log("End: " + (end + 100));
-            console.log("Lines: " + lines);
-            console.log("Inc: " + inc);
-            console.log("Start Y: " + this.rect.startY);
-            console.log("End Y: " + (this.rect.startY + this.rect.h));
-            console.log("Canvas Height: " + this.canvas.height);
             
             var tot_min = (60 * lines);
             console.log("Total mins: " + tot_min);
@@ -148,15 +146,7 @@ Vue.component('emp-item', {
         },
         timeEndCalc: function(start, end, lines, inc) {
             console.log("******************************************");
-            console.log("Actual Start: " + start);
             var time_start = (start - 100);
-            console.log("Start: " + time_start);
-            console.log("End: " + (end + 100));
-            console.log("Lines: " + lines);
-            console.log("Inc: " + inc);
-            console.log("Start Y: " + this.rect.startY);
-            console.log("End Y: " + (this.rect.startY + this.rect.h));
-            console.log("Canvas Height: " + this.canvas.height);
             
             var tot_min = (60 * lines);
             console.log("Total mins: " + tot_min);
@@ -426,226 +416,10 @@ Vue.component('emp-item', {
             this.dragBR = false;
             this.timeStartCalc(this.start, this.end, this.ln, this.ic);
             this.timeEndCalc(this.start, this.end, this.ln, this.ic);
-            this.getStartTime(this.rect.startY);
-            this.getEndTime(this.rect.startY + this.rect.h);
+
             this.calcTime(this.calcStartTime, this.calcEndTime);
-            console.log("Top " +  this.startTime);
-            console.log("Bottom " +  (this.endTime));
         },
-        getEndTime: function (time) {
-            if (time > 0 && time < this.ic) {
-                this.endTime = 0;
-                console.log("12AM");
-            }
-            else if (time >= this.ic && time < (this.ic * 2)) {
-                this.endTime = 1;
-                console.log('1AM');
-            }
-            else if (time >= (this.ic * 2) && time < (this.ic * 3)) {
-                this.endTime = 2;
-                console.log('2AM');
-            }
-            else if (time >= (this.ic * 3) && time < (this.ic * 4)) {
-                this.endTime = 3;
-                console.log('3AM');
-            }
-            else if (time >= (this.ic * 4) && time < (this.ic * 5)) {
-                this.endTime = 4;
-                console.log('4AM');
-            }
-            else if (time >= (this.ic * 5) && time < (this.ic * 6)) {
-                this.endTime = 5;
-                console.log('5AM');
-            }
-            else if (time >= (this.ic * 6) && time < (this.ic * 7)) {
-                this.endTime = 6;
-                console.log('6AM');
-            }
-            else if (time >= (this.ic * 7) && time < (this.ic * 8)) {
-                this.endTime = 7;
-                console.log('7AM');
-            }
-            else if (time >= (this.ic * 8) && time < (this.ic * 9)) {
-                this.endTime = 8;
-                console.log('8AM');
-            }
-            else if (time >= (this.ic * 9) && time < (this.ic * 10)) {
-                this.endTime = 9;
-                console.log('9AM');
-            }
-            else if (time >= (this.ic * 10) && time < (this.ic * 11)) {
-                this.endTime = 10;
-                console.log('10AM');
-            }
-            else if (time >= (this.ic * 11) && time < (this.ic * 12)) {
-                this.endTime = 11;
-                console.log('11AM');
-            }
-            else if (time >= (this.ic * 12) && time < (this.ic * 13)) {
-                this.endTime = 12;
-                console.log('12PM');
-            }
-            else if (time >= (this.ic * 13) && time < (this.ic * 14)) {
-                this.endTime = 13;
-                console.log('1PM');
-            }
-            else if (time >= (this.ic * 14) && time < (this.ic * 15)) {
-                this.endTime = 14;
-                console.log('2PM');
-            }
-            else if (time >= (this.ic * 15) && time < (this.ic * 16)) {
-                this.endTime = 15;
-                console.log('3PM');
-            }
-            else if (time >= (this.ic * 16) && time < (this.ic * 17)) {
-                this.endTime = 16;
-                console.log('4PM');
-            }
-            else if (time >= (this.ic * 17) && time < (this.ic * 18)) {
-                this.endTime = 17;
-                console.log('5PM');
-            }
-            else if (time >= (this.ic * 18) && time < (this.ic * 19)) {
-                this.endTime = 18;
-                console.log('6PM');
-            }
-            else if (time >= (this.ic * 19) && time < (this.ic * 20)) {
-                this.endTime = 19;
-                console.log('7PM');
-            }
-            else if (time >= (this.ic * 20) && time < (this.ic * 21)) {
-                this.endTime = 20;
-                console.log('8PM');
-            }
-            else if (time >= (this.ic * 21) && time < (this.ic * 22)) {
-                this.endTime = 21;
-                console.log('9PM');
-            }
-            else if (time >= (this.ic * 22) && time < (this.ic * 22)) {
-                this.endTime = 22;
-                console.log('10PM');
-            }
-            else if (time >= (this.ic * 23) && time < (this.ic * 24)) {
-                this.endTime = 23;
-                console.log('11PM');
-            }
-            else if (time >=  (this.ic * 24) && time < (this.ic * 25)) {
-                this.endTime = 24;
-                console.log('12AM');
-            }
-            else {
-                console.log('Time has Stopped');
-            }
-        },
-        getStartTime: function (time) {
-            if (time > 0 && time < this.ic) {
-                this.startTime = 0;
-                console.log("12AM");
-            }
-            else if (time >= this.ic && time < (this.ic * 2)) {
-                this.startTime = 1;
-                console.log('1AM');
-            }
-            else if (time >= (this.ic * 2) && time < (this.ic * 3)) {
-                this.startTime = 2;
-                console.log('2AM');
-            }
-            else if (time >= (this.ic * 3) && time < (this.ic * 4)) {
-                this.startTime = 3;
-                console.log('3AM');
-            }
-            else if (time >= (this.ic * 4) && time < (this.ic * 5)) {
-                this.startTime = 4;
-                console.log('4AM');
-            }
-            else if (time >= (this.ic * 5) && time < (this.ic * 6)) {
-                this.startTime = 5;
-                console.log('5AM');
-            }
-            else if (time >= (this.ic * 6) && time < (this.ic * 7)) {
-                this.startTime = 6;
-                console.log('6AM');
-            }
-            else if (time >= (this.ic * 7) && time < (this.ic * 8)) {
-                this.startTime = 7;
-                console.log('7AM');
-            }
-            else if (time >= (this.ic * 8) && time < (this.ic * 9)) {
-                this.startTime = 8;
-                console.log('8AM');
-            }
-            else if (time >= (this.ic * 9) && time < (this.ic * 10)) {
-                this.startTime = 9;
-                console.log('9AM');
-            }
-            else if (time >= (this.ic * 10) && time < (this.ic * 11)) {
-                this.startTime = 10;
-                console.log('10AM');
-            }
-            else if (time >= (this.ic * 11) && time < (this.ic * 12)) {
-                this.startTime = 11;
-                console.log('11AM');
-            }
-            else if (time >= (this.ic * 12) && time < (this.ic * 13)) {
-                this.startTime = 12;
-                console.log('12PM');
-            }
-            else if (time >= (this.ic * 13) && time < (this.ic * (this.ic * 14))) {
-                this.startTime = 13;
-                console.log('1PM');
-            }
-            else if (time >= (this.ic * 14) && time < (this.ic * 15)) {
-                this.startTime = 14;
-                console.log('2PM');
-            }
-            else if (time >= (this.ic * 15) && time < (this.ic * 16)) {
-                this.startTime = 15;
-                console.log('3PM');
-            }
-            else if (time >= (this.ic * 16) && time < (this.ic * 17)) {
-                this.startTime = 16;
-                console.log('4PM');
-            }
-            else if (time >= (this.ic * 17) && time < (this.ic * 18)) {
-                this.startTime = 17;
-                console.log('5PM');
-            }
-            else if (time >= (this.ic * 18) && time < (this.ic * 19)) {
-                this.startTime = 18;
-                console.log('6PM');
-            }
-            else if (time >= (this.ic * 19) && time < (this.ic * 20)) {
-                this.startTime = 19;
-                console.log('7PM');
-            }
-            else if (time >= (this.ic * 20) && time < (this.ic * 21)) {
-                this.startTime = 20;
-                console.log('8PM');
-            }
-            else if (time >= (this.ic * 21) && time < (this.ic * 22)) {
-                this.startTime = 21;
-                console.log('9PM');
-            }
-            else if (time >= (this.ic * 22) && time < (this.ic * 22)) {
-                this.startTime = 22;
-                console.log('10PM');
-            }
-            else if (time >= (this.ic * 23) && time < (this.ic * 24)) {
-                this.startTime = 23;
-                console.log('11PM');
-            }
-            else if (time >=  (this.ic * 24) && time < (this.ic * 25)) {
-                this.startTime = 24;
-                console.log('12AM');
-            }
-            else {
-                console.log('Time has Stopped');
-            }
-        }
-
-
-
-  }
+    }
   
   })
   
