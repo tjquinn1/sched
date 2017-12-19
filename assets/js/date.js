@@ -14,7 +14,7 @@ Vue.component('emp-item', {
     props: ['emp', 'lines', 'start', 'end'],
     template: `<div class="cv">
                 <h6>{{emp.first_name}} {{ this.timeWorked }}</h6>
-                <canvas  v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" :id="'cv' + emp.id" class="canvas"  width="150" height="700"></canvas>
+                <canvas  v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" v-on:dblclick="dclick" :id="'cv' + emp.id" class="canvas"  width="150" height="700"></canvas>
                 <canvas  class="back" :id="'back' + emp.id"   width="150" height="700"></canvas>
                 </div>`,
     data: function() {
@@ -56,9 +56,10 @@ Vue.component('emp-item', {
             this.timeEndCalc(this.start, this.end, this.ln, this.ic);
         },
         start: function () {
-            this.calcTime(this.calcStartTime, this.calcEndTime);
+            
             this.timeStartCalc(this.start, this.end, this.ln, this.ic);
             this.timeEndCalc(this.start, this.end, this.ln, this.ic);
+            this.calcTime(this.calcStartTime, this.calcEndTime);
         }
     },
     created: function () {
@@ -281,12 +282,7 @@ Vue.component('emp-item', {
             console.log("GET VAL : " + x);
             this.ic = (this.st / x);
             console.log("IC: " + this.ic);
-            this.rect = {
-                startX: 25,
-                startY: 100,
-                w: (this.canvas.width - 50),
-                h: 300,
-            }
+            
         },
         draw: function () {
             for (let  i = 0; i < this.st; i+=this.ic) {
@@ -419,6 +415,21 @@ Vue.component('emp-item', {
 
             this.calcTime(this.calcStartTime, this.calcEndTime);
         },
+
+        dclick: function () {
+            this.rect = {
+                startX: 25,
+                startY: 100,
+                w: (this.canvas.width - 50),
+                h: 300,
+            }
+            
+            
+            this.timeStartCalc(this.start, this.end, this.ln, this.ic);
+            this.timeEndCalc(this.start, this.end, this.ln, this.ic);
+            this.calcTime(this.calcStartTime, this.calcEndTime);
+
+        }
     }
   
   })
