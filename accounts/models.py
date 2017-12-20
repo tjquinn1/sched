@@ -39,7 +39,7 @@ class UserManager(BaseUserManager):
             email,
             first_name,
             last_name,
-            password
+            password,
         )
         user.is_staff = True
         user.is_superuser = True
