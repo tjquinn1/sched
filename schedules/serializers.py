@@ -4,6 +4,7 @@ from locations.models import Location
 from accounts.models import Biz, Emp
 
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -16,12 +17,10 @@ class UserSerializer(serializers.ModelSerializer):
         depth = 1
 
 class LocationSerializer(serializers.ModelSerializer):
-    emps = Emp.objects.filter(biz_id=biz)
-    emps_length = len(emps)
+    
     class Meta:
         fields = (
             'biz',
-            'emps_length'
             'name',
             'sunday_start',
             'sunday_end',
@@ -73,6 +72,6 @@ class EmpSerializer(serializers.ModelSerializer):
         'saturday_end',
 
     )
-    depth = 1
+    
 
 
