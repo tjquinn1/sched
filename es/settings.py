@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
     'locations',
     'business',
     'employee',
@@ -127,3 +128,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
 
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = '/login_success/'
+
+GRAPHENE = {
+    'SCHEMA': 'es.schema.schema',
+}

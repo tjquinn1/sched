@@ -59,11 +59,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     pos = models.CharField(max_length=4, null=True) 
+    token = models.CharField(max_length=40, null=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = binascii.hexlify(os.urandom(20)).decode()
+        return super().save(*args, **kwargs)
 
     def get_full_name(self):
         # The user is identified by their email address
@@ -100,7 +106,7 @@ class Biz(models.Model):
     code = models.CharField(max_length=6, null=False, default='')
 
 class Emp(models.Model):
-    emp = models.ForeignKey(to=settings.AUTH_USER_MODEL, blank=True, null=True, related_name='emp', on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, blank=True, null=True, related_name='emp', on_delete=models.CASCADE)
     biz = models.ForeignKey(Biz, blank=True, null=True, related_name='biz', on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
     

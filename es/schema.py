@@ -1,0 +1,13 @@
+import graphene
+
+import schedules.schema
+import accounts.schema
+
+
+class Query(accounts.schema.Query, schedules.schema.Query, graphene.ObjectType):
+    pass
+class Mutation(accounts.schema.Mutation, schedules.schema.Mutation, graphene.ObjectType):
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
