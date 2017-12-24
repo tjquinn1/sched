@@ -5,6 +5,6 @@ from django.urls import path
 from . import views
 app_name = 'schedules'
 urlpatterns = [
-    path('create/<int:pk>/', views.create, name="create"),
+    path('new/<int:pk>/', views.new, name="new"),
  
 ]

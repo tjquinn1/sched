@@ -25,7 +25,7 @@ SECRET_KEY = 'hn4@vz9gq(c5(un5%-me5yt-u(0d%%gzviwwv7#u-75vw%xi8!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -138,3 +138,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     )
 }
+
+#CSRF_COOKIE_NAME = "XSRF-TOKEN"

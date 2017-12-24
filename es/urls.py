@@ -20,18 +20,23 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
 from . import views
+
 from schedules import views as sched_views
 from rest_framework import routers
+from rest_framework.schemas import get_schema_view
+schema_view = get_schema_view(title='Dockitt API')
 
 
 router = routers.DefaultRouter()
 router.register(r'locations', sched_views.LocationViewSet)
 router.register(r'employees', sched_views.EmpViewSet)
 router.register(r'accounts', sched_views.UserViewSet)
+router.register(r'schedules', sched_views.SchedViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
+    path('schema/', schema_view),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path("accounts/", include("accounts.urls", namespace='accounts')),
     path("schedules/", include("schedules.urls", namespace='schedules')),

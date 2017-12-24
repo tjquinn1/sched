@@ -11,7 +11,7 @@ Vue.component('date', {
   
 
 Vue.component('emp-item', {
-    props: ['emp', 'lines', 'start', 'end'],
+    props: ['emp', 'lines', 'start', 'end', 'today', 'loc'],
     template: `<div  class="cv">
                 <h6>{{emp.user.first_name}} {{ this.timeWorked }}</h6>
                 <canvas  v-on:mousedown="mouseDown" v-on:mousemove="mouseMove" v-on:mouseup="mouseUp" v-on:dblclick="dclick" :id="'cv' + emp.emp" class="canvas"  width="150" height="700"></canvas>
@@ -38,7 +38,7 @@ Vue.component('emp-item', {
             ln: 0,
             calcStartTime: 0,
             calcEndTime: 0,
-            iN: false
+            location: 0
             
             
             
@@ -61,8 +61,41 @@ Vue.component('emp-item', {
             this.timeStartCalc(this.start, this.end, this.ln, this.ic);
             this.timeEndCalc(this.start, this.end, this.ln, this.ic);
             this.calcTime(this.calcStartTime, this.calcEndTime);
-            
-            
+            this.location = this.loc[0].biz
+            var csrftoken = Cookies.get('csrftoken');
+            console.log(this.startTime)
+            axios({
+                method: 'post',
+                url: "/api/schedules/",
+                data:{
+                    emp: "10",
+                    start_time: 1202,
+                    end_time: 1292,
+                    date: "09/16/1991",
+                    location: "4"
+                },
+                headers : {"X-CSRFToken" : csrftoken },
+                dataType: "json",
+                contentType: "application/json",
+                proxy: {
+                    host: '127.0.0.1',
+                    port: 8000,
+                    auth: {
+                      username: 'test@gmail.com',
+                      password: 'Goodbye35'
+                    }
+                },
+                auth: {
+                    username: 'test@gmail.com',
+                    password: 'Goodbye35'
+                  },
+                
+              }).catch(function (error) {
+                  
+                console.log(error);
+              });
+              
+                
         },
     },
     created: function () {
@@ -84,6 +117,9 @@ Vue.component('emp-item', {
         
 
 
+    },
+    beforeDestroy: function () {
+        console.log("destory");
     },                
     methods: {
 
@@ -237,10 +273,11 @@ Vue.component('emp-item', {
                 this.ctx.beginPath();
                 this.ctx.moveTo(0, i);
                 this.ctx.lineTo(500, i);
-                this.ctx.stroke(); }
+                this.ctx.stroke(); 
                 this.ctx.fillStyle = "#222222";
                 this.ctx.fillRect(this.rect.startX, this.rect.startY, this.rect.w, this.rect.h);
                 this.drawHandles();
+            }
         },
         getBack: function (x) {
             this.back = 'back' + this.emp.emp;
@@ -363,6 +400,7 @@ Vue.component('emp-item', {
                         v-bind:key="item.id"
                         v-bind:lines="lines"
                         v-bind:start="start"
+                        v-bind:loc="loc"
                         v-bind:end="end">
                     </emps-item>
                     </div>`,
@@ -381,10 +419,10 @@ Vue.component('emp-item', {
         }
     },
     beforeCreate: function () {
-        axios.get('/locations/')
+        axios.get('/api/locations/')
         .then(response => {
             this.loc = response.data;
-            console.log(this.loc[0].thursday_start);
+            console.log(this.loc[0].biz);
         });
     },
     methods: {
@@ -532,7 +570,7 @@ Vue.component('emp-item', {
     },
     mounted: function () {
         
-        axios.get('/employees/')
+        axios.get('/api/employees/')
         .then(response => {
             this.employ = response.data;
         });

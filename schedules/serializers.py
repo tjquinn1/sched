@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from locations.models import Location
 from accounts.models import Biz, Emp
+from schedules.models import Schedule
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -54,6 +55,7 @@ class EmpSerializer(serializers.ModelSerializer):
     class Meta:
         model = Emp
         fields = (
+        'id',    
         'emp',
         'user',
         'sunday_start',
@@ -72,6 +74,18 @@ class EmpSerializer(serializers.ModelSerializer):
         'saturday_end',
 
     )
+
+class SchedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Schedule
+        fields = (
+            'location',
+            'emp',
+            'date',
+            'start_time',
+            'end_time'
+        )
     
 
 
