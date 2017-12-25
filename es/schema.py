@@ -2,11 +2,12 @@ import graphene
 
 import schedules.schema
 import accounts.schema
+import locations.schema
 
 
 class Query(accounts.schema.Query, schedules.schema.Query, graphene.ObjectType):
     pass
-class Mutation(accounts.schema.Mutation, schedules.schema.Mutation, graphene.ObjectType):
+class Mutation(accounts.schema.Mutation, schedules.schema.Mutation, locations.schema.Mutation, graphene.ObjectType):
     pass
 
 

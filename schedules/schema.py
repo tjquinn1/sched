@@ -4,6 +4,7 @@ from graphene_django import DjangoObjectType
 from schedules.models import Schedule
 from accounts.models import Biz, Emp
 from accounts.schema import get_user, UserType, BizType, EmpType
+from locations.schema import LocationType
 
 
 class ScheduleType(DjangoObjectType):
@@ -21,18 +22,21 @@ class Query(graphene.ObjectType):
 
 class CreateSchedule(graphene.Mutation):
     schedule = graphene.Field(ScheduleType)
-
-    #2
+    location = graphene.Field(LocationType)
+    emp = graphene.Field(EmpType)
+    
     class Arguments:
         startTime = graphene.Int()
         endTime = graphene.Int()
-        location = graphene.Int()
-        emp = graphene.Int()
 
 
-    #3
-    def mutate(self, info, startTime, endTime, location, emp):
-        schedule = Schedule(startTime=startTime, endTime=endTime, location=location, emp=emp)
+    def mutate(self, info, startTime, endTime):
+        schedule = Schedule(
+            startTime=startTime, 
+            endTime=endTime, 
+            location=location, 
+            emp=emp
+            )
         schedule.save()
 
         return CreateSchedule(
