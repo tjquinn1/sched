@@ -30,6 +30,13 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
+
 INSTALLED_APPS = [
     'accounts',
     'django.contrib.admin',
@@ -39,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'graphene_django',
+    'webpack_loader',
     'locations',
     'business',
     'employee',

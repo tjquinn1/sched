@@ -33,9 +33,9 @@ def create(request, pk):
     
     for emp in emps:
         j = {}
-        j['id'] = emp.emp_id
-        sf.append(emp.emp_id)
-        j['first_name'] = emp.emp.first_name
+        j['id'] = emp.user_id
+        sf.append(emp.user_id)
+        j['first_name'] = emp.user.first_name
         j['sunday_start'] = emp.sunday_start
         j['sunday_end'] = emp.sunday_end
         j['monday_start'] = emp.monday_start

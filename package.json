@@ -1,0 +1,25 @@
+{
+  "name": "sched",
+  "version": "1.0.0",
+  "description": "",
+  "main": "date.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjquinn1/sched.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tjquinn1/sched/issues"
+  },
+  "homepage": "https://github.com/tjquinn1/sched#readme",
+  "devDependencies": {
+    "react": "^16.2.0",
+    "webpack": "^3.10.0",
+    "webpack-bundle-tracker": "^0.2.1",
+    "webpack-dev-server": "^2.9.7"
+  }
+}
