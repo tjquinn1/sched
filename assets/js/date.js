@@ -1,13 +1,50 @@
 Vue.config.devtools = true
 
-var bus = new Vue()
+import { ApolloClient } from 'apollo-client'
+import { HttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import VueApollo from 'vue-apollo'
 
-Vue.component('date', {
-   
-  
-  
-  })
+const httpLink = new HttpLink({
+  // You should use an absolute URL here
+  uri: 'http://localhost:8000/graphql',
+})
 
+// Create the apollo client
+const apolloClient = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
+  connectToDevTools: true,
+})
+
+// Install the vue plugin
+Vue.use(VueApollo)
+
+import App from './App';
+
+import gql from 'graphql-tag';
+import { loadavg } from 'os';
+
+Vue.config.productionTip = false
+
+
+const apolloProvider = new VueApollo({
+  defaultClient: apolloClient,
+  defaultOptions: {
+    $loadingKey: 'loading'
+  }
+})
+const ALL_EMPS_QUERY = gql`
+    query {
+        emps {
+          id
+          user {
+            firstName
+            lastName
+          }
+        }
+      }
+}`
   
 
 Vue.component('emp-item', {
@@ -80,23 +117,14 @@ Vue.component('emp-item', {
     },                
     methods: {
         timeStartCalc: function(start, end, lines, inc) {
-            console.log("******************************************");
             var time_start = (start - 100);
-            
             var tot_min = (60 * lines);
-            console.log("Total mins: " + tot_min);
             var mins_per_y =  (tot_min / 700);
-            console.log("Mins / Y: " + mins_per_y);
             var rec_times_y = (mins_per_y * this.rect.startY);
-            console.log("Rect x Y: " + rec_times_y);
             var rty_div_60 = (rec_times_y / 60);
-            console.log("RTY/60: " + rty_div_60);
             var rty_trunc = Math.trunc(rty_div_60);
-            console.log("TRUNC RTY: " + rty_trunc);
             var rty_trunc_times_hund = (rty_trunc * 100);
-            console.log("TRUNC RTY X 100: " + rty_trunc_times_hund);
             var time_start_plus_hund = time_start + rty_trunc_times_hund
-            console.log("Time Start + Hund: " + time_start_plus_hund);
             
             function getlength(number) {
                 var len_time = number.toString().length;
@@ -104,36 +132,23 @@ Vue.component('emp-item', {
             }
             if ( getlength(time_start_plus_hund) === 3) {
                 var num_string = time_start_plus_hund.toString().substr(1,2);
-                console.log("SPLIT STRING: " + num_string);
             } else {
                 var num_string = time_start_plus_hund.toString().substr(2,2);
-                console.log("SPLIT STRING: " + num_string);
-
             }
 
-            console.log(getlength(time_start_plus_hund));
             var remain = rty_div_60 - rty_trunc;
-            console.log("REMAINDER: " + remain);
             var remain_mins = remain * 60
-            console.log("REMAINDER MINS: " + remain_mins);
             var rounded_remain = parseInt(remain_mins.toPrecision(2));
-            console.log("Rounded Remainder: " + rounded_remain);
-            
             
             var string_to_num = parseInt(num_string);
             var mins_add = string_to_num + rounded_remain;
-            console.log("Added mins: " + mins_add);
             
             if (mins_add >= 60) {
                 var time_hund_round = Math.round(time_start_plus_hund/100) * 100;
-                console.log("TIMES HUND ROUND: " + time_hund_round);
                 var div_mins = mins_add / 60;
-                console.log("Divided Mins: " + div_mins);
                 var div_mins_trunc = Math.trunc(div_mins);
-                console.log("TRUNC DIV MINS: " + div_mins_trunc);
                 var div_trunc_times_hund = div_mins_trunc * 100;
                 var hrs_add_to_tot = div_trunc_times_hund + time_hund_round
-                console.log("NEW Hours: " + hrs_add_to_tot);
                 var remain_mns = div_mins - div_mins_trunc;
                 var mns_to_add = remain_mns * 60;
                 this.calcStartTime = hrs_add_to_tot + mns_to_add;
@@ -146,23 +161,15 @@ Vue.component('emp-item', {
 
         },
         timeEndCalc: function(start, end, lines, inc) {
-            console.log("******************************************");
             var time_start = (start - 100);
             
             var tot_min = (60 * lines);
-            console.log("Total mins: " + tot_min);
             var mins_per_y =  (tot_min / 700);
-            console.log("Mins / Y: " + mins_per_y);
             var rec_times_y = (mins_per_y * (this.rect.startY + this.rect.h));
-            console.log("Rect x Y: " + rec_times_y);
             var rty_div_60 = (rec_times_y / 60);
-            console.log("RTY/60: " + rty_div_60);
             var rty_trunc = Math.trunc(rty_div_60);
-            console.log("TRUNC RTY: " + rty_trunc);
             var rty_trunc_times_hund = (rty_trunc * 100);
-            console.log("TRUNC RTY X 100: " + rty_trunc_times_hund);
             var time_start_plus_hund = time_start + rty_trunc_times_hund
-            console.log("Time Start + Hund: " + time_start_plus_hund);
             
             function getlength(number) {
                 var len_time = number.toString().length;
@@ -170,36 +177,23 @@ Vue.component('emp-item', {
             }
             if ( getlength(time_start_plus_hund) === 3) {
                 var num_string = time_start_plus_hund.toString().substr(1,2);
-                console.log("SPLIT STRING: " + num_string);
             } else {
                 var num_string = time_start_plus_hund.toString().substr(2,2);
-                console.log("SPLIT STRING: " + num_string);
-
             }
 
-            console.log(getlength(time_start_plus_hund));
             var remain = rty_div_60 - rty_trunc;
-            console.log("REMAINDER: " + remain);
             var remain_mins = remain * 60
-            console.log("REMAINDER MINS: " + remain_mins);
             var rounded_remain = parseInt(remain_mins.toPrecision(2));
-            console.log("Rounded Remainder: " + rounded_remain);
-            
-            
+
             var string_to_num = parseInt(num_string);
             var mins_add = string_to_num + rounded_remain;
-            console.log("Added mins: " + mins_add);
             
             if (mins_add >= 60) {
                 var time_hund_round = Math.round(time_start_plus_hund/100) * 100;
-                console.log("TIMES HUND ROUND: " + time_hund_round);
                 var div_mins = mins_add / 60;
-                console.log("Divided Mins: " + div_mins);
                 var div_mins_trunc = Math.trunc(div_mins);
-                console.log("TRUNC DIV MINS: " + div_mins_trunc);
                 var div_trunc_times_hund = div_mins_trunc * 100;
                 var hrs_add_to_tot = div_trunc_times_hund + time_hund_round
-                console.log("NEW Hours: " + hrs_add_to_tot);
                 var remain_mns = div_mins - div_mins_trunc;
                 var mns_to_add = remain_mns * 60;
                 this.calcEndTime = hrs_add_to_tot + mns_to_add;
@@ -213,11 +207,10 @@ Vue.component('emp-item', {
         },
         calcTime: function (start, end) {
             
-            console.log(start);
-            console.log(end);
+            console.log("Start time: " + start);
+            console.log("End Time: " + end);
             var start_string = start.toString();
             if (start_string.length === 3) {
-                console.log("Three");
                 var split_start_hours_string = start.toString().slice(0,1);
                 var split_start_mins_string = start.toString().slice(1,3);
             } else {
@@ -226,14 +219,11 @@ Vue.component('emp-item', {
             }
             // Start hours
             var split_start_hours_number = parseInt(split_start_hours_string);
-            console.log("SPLIT Start Hours: " + split_start_hours_number);
             // Start Minutes 
             var split_start_mins_number = parseInt(split_start_mins_string);
-            console.log("SPLIT Start Minutes: " + split_start_mins_number);
             /*************End Hours********************* */
             var end_string = end.toString();
             if (end_string.length === 3) {
-                console.log("Three");
                 var split_end_hours_string = end.toString().slice(0,1);
                 var split_end_mins_string = end.toString().slice(1,3);
             } else {
@@ -243,11 +233,9 @@ Vue.component('emp-item', {
             // End hours
             
             var split_end_hours_number = parseInt(split_end_hours_string);
-            console.log("SPLIT End Hours: " + split_end_hours_number);
             //End Minutes
             
             var split_end_mins_number = parseInt(split_end_mins_string);
-            console.log("SPLIT End Minutes: " + split_end_mins_number);
             
             
             if (split_end_mins_number < split_start_mins_number) {
@@ -256,21 +244,17 @@ Vue.component('emp-item', {
             }
             var hour_diff = split_end_hours_number - split_start_hours_number;
             var mins_diff = split_end_mins_number - split_start_mins_number;
-            console.log("Hours diff: " + hour_diff);
-            console.log("Mins diff: " + mins_diff);
             if ( mins_diff < 10) {
                 var mins_diff_string = mins_diff.toString();
                 var add_zero = "0" + mins_diff_string;
                 
                 var time_string = hour_diff.toString() + add_zero;
                 this.timeWorked = parseInt(time_string);
-                console.log("Time worked: " + this.timeWorked);
                 
 
             } else {
             var time_string = hour_diff.toString() + mins_diff.toString();
             this.timeWorked = parseInt(time_string);
-            console.log("Time worked: " + this.timeWorked);
             }            
         },
         getVal: function (x) {
@@ -279,20 +263,18 @@ Vue.component('emp-item', {
             this.ctx = this.canvas.getContext('2d');
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.st = this.canvas.height;
-            console.log("GET VAL : " + x);
-            this.ic = (this.st / x);
-            console.log("IC: " + this.ic);
-            
+            this.ic = (this.st / x);           
         },
         draw: function () {
             for (let  i = 0; i < this.st; i+=this.ic) {
                 this.ctx.beginPath();
                 this.ctx.moveTo(0, i);
                 this.ctx.lineTo(500, i);
-                this.ctx.stroke(); }
+                this.ctx.stroke(); 
                 this.ctx.fillStyle = "#222222";
                 this.ctx.fillRect(this.rect.startX, this.rect.startY, this.rect.w, this.rect.h);
                 this.drawHandles();
+            }
         },
         getBack: function (x) {
             this.back = 'back' + this.emp.id;
@@ -300,24 +282,20 @@ Vue.component('emp-item', {
             this.ctx1 = this.canvas1.getContext('2d');
             this.ctx1.clearRect(0, 0, this.canvas1.width, this.canvas1.height);
             this.st = this.canvas1.height;
-            console.log("GET VAL : " + x);
             this.ic = (this.st / x);
-            console.log("IC: " + this.ic);
         },
         
 
         drawBack: function () {
-        var qtr = (this.ic/4);
-        console.log("QTR: " + qtr);
+            var qtr = (this.ic/4);
 
             for (let  i = 0; i < this.st; i+= qtr) {
                 this.ctx1.beginPath();
                 this.ctx1.moveTo(0, i);
                 this.ctx1.lineTo(500, i);
-                this.ctx1.stroke(); }
+                this.ctx1.stroke(); 
                 this.ctx1.strokeStyle = "#42f4dc";
-                
-                
+            }        
         },
         drawHandles: function () {
             this.drawCircle(this.rect.startX + this.rect.w/2, this.rect.startY, this.closeEnough); //top left corner
@@ -436,6 +414,7 @@ Vue.component('emp-item', {
   
   var app7 = new Vue({
     el: '#app-7',
+    apolloProvider,
     template: `<div class="b">
                     <div>
                         <button class="c" v-on:click="previousDay">&lsaquo;</button>
@@ -453,17 +432,24 @@ Vue.component('emp-item', {
                     </div>`,
     data: function() {
     return {
-    empList : l,
-    today : new Date,
-    tomorrow : new Date(),
-    ss: '',
-    start: 0,
-    end: 0,
-    st: 0,
-    lines: 0,
-    day: 0
-    }
+        empList : l,
+        today : new Date,
+        tomorrow : new Date(),
+        ss: '',
+        start: 0,
+        end: 0,
+        st: 0,
+        lines: 0,
+        day: 0,
+        emps: [],
+        loading: 0
+        }
     },
+    apollo: {
+        emps: {
+          query: ALL_EMPS_QUERY
+        }
+      },
     methods: {
     nextDay: function () {
     this.tomorrow.setDate(this.today.getDate()+1);
@@ -613,6 +599,7 @@ Vue.component('emp-item', {
     },
     mounted: function () {
     this.getD();
+    console.log("All emps: " + emps);
     },
     created: function () {
     this.set();
