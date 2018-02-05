@@ -1,8 +1,10 @@
 import graphene
 from graphene_django import DjangoObjectType
-
+from django.shortcuts import get_object_or_404
 from accounts.models import User, Emp, Biz
 from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.utils import timezone
 import random
 import string
 
@@ -40,20 +42,24 @@ class CreateUser(graphene.Mutation):
         lastName = graphene.String(required=True)
         password = graphene.String(required=True)
         email = graphene.String(required=True)
+        pos = graphene.String(required=True)
 
-    def mutate(self, info, firstName, lastName, password, email):
+    def mutate(self, info, firstName, lastName, password, email, pos):
         user = User(
             email=email,
             last_name=lastName,
-            first_name = firstName
+            first_name = firstName,
+            pos = pos
         )
         user.set_password(password)
         user.save()
 
         return CreateUser(user=user)
 
-class LogIn(graphene.Mutation):
+class Login(graphene.Mutation):
     user = graphene.Field(UserType)
+    pos = graphene.String()
+    biz = graphene.Field(BizType)
 
     class Arguments:
         email = graphene.String()
@@ -61,17 +67,23 @@ class LogIn(graphene.Mutation):
 
     def mutate(self, info, email, password):
         user = authenticate(username=email, password=password)
-
+        pos = user.pos
+        if pos == "owner":
+            biz = get_object_or_404(Biz, owner_id=user.id)
+            print(biz.name)
         if not user:
             raise Exception('Invalid username or password!')
-
+        info.context.session['user_id'] = user.id
         info.context.session['token'] = user.token
-        return LogIn(user=user)
+        info.context.session['pos'] = user.pos
+        info.context.session['biz'] = biz.id
+        return Login(user=user, pos=pos, biz=biz)
 
 class CreateEmp(graphene.Mutation):
+    id = graphene.Int()
     emp = graphene.Field(EmpType)
     biz = graphene.Field(BizType)
-    user = graphene.Field(UserType)
+    user = graphene.Int()
     
     
 
@@ -91,10 +103,10 @@ class CreateEmp(graphene.Mutation):
         saturdayStart = graphene.Int()
         saturdayEnd = graphene.Int()
         code = graphene.String()
+        user = graphene.Int()
 
-    def mutate(self, info, code, sundayStart, sundayEnd, mondayStart, mondayEnd,tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd,thursdayStart, thursdayEnd,fridayStart, fridayEnd,saturdayStart, saturdayEnd):
-        user = get_user(info) or None
-
+    def mutate(self, info, user, code, sundayStart, sundayEnd, mondayStart, mondayEnd,tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd,thursdayStart, thursdayEnd,fridayStart, fridayEnd,saturdayStart, saturdayEnd):
+        user = get_object_or_404(User, id=user)
         biz  = Biz.objects.filter(code=code).first()
         if not biz:
             raise Exception('Invalid Code!')
@@ -129,15 +141,16 @@ class CreateBiz(graphene.Mutation):
     id = graphene.Int()
     name = graphene.String()
     code = graphene.String()
-    owner = graphene.Field(UserType)
+    owner = graphene.Int()
     
 
     class Arguments:
         name = graphene.String()
+        owner = graphene.Int()
 
 
-    def mutate(self, info, name):
-        user = get_user(info) or None
+    def mutate(self, info, name, owner):
+        user = get_object_or_404(User, id=owner)
         code = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(6))
         biz = Biz(
             code = code,
@@ -154,9 +167,12 @@ class CreateBiz(graphene.Mutation):
             owner = biz.owner
         )
 
+
+
+
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()
-    login = LogIn.Field()
+    login = Login.Field()
     create_emp = CreateEmp.Field()
     create_biz = CreateBiz.Field()
 

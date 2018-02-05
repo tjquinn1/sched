@@ -25,7 +25,8 @@ SECRET_KEY = 'hn4@vz9gq(c5(un5%-me5yt-u(0d%%gzviwwv7#u-75vw%xi8!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1' ,'http://localhost:8080/#/']
+CORS_ORIGIN_ALLOW_ALL = True 
 
 
 # Application definition
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'graphene_django',
     'webpack_loader',
     'locations',
@@ -54,6 +56,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -140,3 +144,5 @@ LOGIN_REDIRECT_URL = '/login_success/'
 GRAPHENE = {
     'SCHEMA': 'es.schema.schema',
 }
+
+CORS_ORIGIN_ALLOW_ALL = True

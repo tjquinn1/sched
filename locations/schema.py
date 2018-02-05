@@ -1,9 +1,11 @@
 import graphene
 from graphene_django import DjangoObjectType
-
+from django.shortcuts import get_object_or_404
 from .models import Location
 from accounts.models import Biz, User
 from accounts.schema import BizType
+from accounts.schema import UserType
+from accounts.schema import EmpType
 
 def get_user(info):
     token = info.context.session.get('token')
@@ -25,6 +27,7 @@ class LocationType(DjangoObjectType):
 class CreateLocation(graphene.Mutation):
     location = graphene.Field(LocationType)
     biz = graphene.Field(BizType)
+    id = graphene.Int()
     
     
 
@@ -44,13 +47,11 @@ class CreateLocation(graphene.Mutation):
         fridayEnd = graphene.Int()
         saturdayStart = graphene.Int()
         saturdayEnd = graphene.Int()
+        user = graphene.Int()
         
 
-    def mutate(self, info, name, sundayStart, sundayEnd, mondayStart, mondayEnd,tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd,thursdayStart, thursdayEnd,fridayStart, fridayEnd,saturdayStart, saturdayEnd):
-        user = get_user(info) or None
-        biz  = Biz.objects.filter(owner_id=user.id).first()
-        if not biz:
-            raise Exception('Biz not found!')
+    def mutate(self, info, name, user, sundayStart, sundayEnd, mondayStart, mondayEnd,tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd,thursdayStart, thursdayEnd,fridayStart, fridayEnd,saturdayStart, saturdayEnd):
+        biz  = get_object_or_404(Biz, owner=user)
         
         location = Location(
             biz = biz,
@@ -80,3 +81,19 @@ class CreateLocation(graphene.Mutation):
 
 class Mutation(graphene.ObjectType):
     create_location = CreateLocation.Field()
+
+class Query(graphene.ObjectType):
+    biz_emps = graphene.List(EmpType)
+    bizLocations = graphene.List(LocationType,
+                                    biz=graphene.Int())
+
+    def resolve_bizLocations(self, info, **kwargs):
+        print(kwargs)
+        biz = kwargs.get('biz')
+        if id is not None:
+            return Location.objects.filter(biz=biz)
+        
+
+
+    def resolve_biz_emps(self, biz, info):
+        return Biz.objects.filter(id=biz)

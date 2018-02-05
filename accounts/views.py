@@ -69,7 +69,6 @@ def Edit(request):
 @login_required
 def biz(request):
     form = forms.BizForm()
-    pos = forms.PartialUserForm(instance=request.user)
     code = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(6))
     # if this is a POST request we need to process the form data
     if request.method == 'POST':

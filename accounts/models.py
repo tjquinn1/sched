@@ -6,6 +6,8 @@ from django.contrib.auth.models import (
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+import binascii
+import os
 
 
 

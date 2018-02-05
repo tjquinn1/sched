@@ -1,9 +1,11 @@
-Vue.config.devtools = true
-
 import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
+
+
+import gql from 'graphql-tag';
+import { loadavg } from 'os';
 
 const httpLink = new HttpLink({
   // You should use an absolute URL here
@@ -19,11 +21,8 @@ const apolloClient = new ApolloClient({
 
 // Install the vue plugin
 Vue.use(VueApollo)
+Vue.config.devtools = true
 
-import App from './App';
-
-import gql from 'graphql-tag';
-import { loadavg } from 'os';
 
 Vue.config.productionTip = false
 
