@@ -179,7 +179,8 @@ class Mutation(graphene.ObjectType):
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     users = graphene.List(UserType)
-    emps = graphene.List(EmpType)
+    emps = graphene.List(EmpType,
+            biz=graphene.Int())
     bizs = graphene.List(BizType)
 
     def resolve_users(self, info):
@@ -192,8 +193,11 @@ class Query(graphene.ObjectType):
 
         return user
 
-    def resolve_emps(self, info):
-        return Emp.objects.all()
+    def resolve_emps(self, info, **kwargs):
+        print(kwargs)
+        biz = kwargs.get('biz')
+        if id is not None:
+            return Emp.objects.filter(biz=biz)
 
     def resolve_bizs(self, info):
         return Biz.objects.all()

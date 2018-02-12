@@ -83,7 +83,7 @@ class Mutation(graphene.ObjectType):
     create_location = CreateLocation.Field()
 
 class Query(graphene.ObjectType):
-    biz_emps = graphene.List(EmpType)
+    location = graphene.Field(LocationType, location=graphene.Int())
     bizLocations = graphene.List(LocationType,
                                     biz=graphene.Int())
 
@@ -95,5 +95,8 @@ class Query(graphene.ObjectType):
         
 
 
-    def resolve_biz_emps(self, biz, info):
-        return Biz.objects.filter(id=biz)
+    def resolve_location(self, info, **kwargs):
+        print(kwargs)
+        location = kwargs.get('location')
+        if id is not None:
+            return Location.objects.get(id=location)
