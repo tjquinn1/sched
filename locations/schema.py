@@ -6,6 +6,8 @@ from accounts.models import Biz, User
 from accounts.schema import BizType
 from accounts.schema import UserType
 from accounts.schema import EmpType
+from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.backends.db import SessionStore
 
 def get_user(info):
     token = info.context.session.get('token')
@@ -86,9 +88,9 @@ class Query(graphene.ObjectType):
     location = graphene.Field(LocationType, location=graphene.Int())
     bizLocations = graphene.List(LocationType,
                                     biz=graphene.Int())
-
     def resolve_bizLocations(self, info, **kwargs):
-        print(kwargs)
+        #print(dir(info.context.user))
+        #print(info)
         biz = kwargs.get('biz')
         if id is not None:
             return Location.objects.filter(biz=biz)

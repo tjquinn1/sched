@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from . import forms
-from accounts.models import Biz
+from business.models import Biz
 from django.http import HttpResponseRedirect
 
 # Create your views here.

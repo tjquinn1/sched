@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from locations.models import Location
-from accounts.models import Biz, Emp
+from business.models import Biz
+from employee.models import Emp
 import json
 
 

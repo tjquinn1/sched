@@ -12,8 +12,20 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponseRedirect
 import random
 import string
-from .models import Biz
+from business.models import Biz
 from django.contrib import messages
+from rest_framework import viewsets
+from accounts.serializers import UserSerializer
+from django.contrib.auth import get_user_model
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    User = get_user_model()
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 def custom_login(request):

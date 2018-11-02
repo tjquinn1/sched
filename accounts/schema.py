@@ -2,11 +2,13 @@ import graphene
 from graphene_django import DjangoObjectType
 from django.shortcuts import get_object_or_404
 from accounts.models import User, Emp, Biz
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login as auth_login
 from django.utils import timezone
 import random
 import string
+from django.contrib.sessions.backends.db import SessionStore
 
 def get_user(info):
     token = info.context.session.get('token')
@@ -73,11 +75,23 @@ class Login(graphene.Mutation):
             print(biz.name)
         if not user:
             raise Exception('Invalid username or password!')
-        info.context.session['user_id'] = user.id
         info.context.session['token'] = user.token
         info.context.session['pos'] = user.pos
         info.context.session['biz'] = biz.id
+        print(info.context.session.get('biz'))
+        #auth_login(info.context, user)
         return Login(user=user, pos=pos, biz=biz)
+
+class Logout(graphene.Mutation):
+    ok = graphene.Boolean()
+    class Arguments:
+        user =graphene.Int()
+
+    def mutate(self, info, user):
+        print(info.context.session.get('biz'))
+        auth_logout(info.context)
+        return Logout(ok=True)
+        
 
 class CreateEmp(graphene.Mutation):
     id = graphene.Int()
@@ -143,11 +157,9 @@ class CreateBiz(graphene.Mutation):
     code = graphene.String()
     owner = graphene.Int()
     
-
     class Arguments:
         name = graphene.String()
         owner = graphene.Int()
-
 
     def mutate(self, info, name, owner):
         user = get_object_or_404(User, id=owner)
@@ -175,6 +187,7 @@ class Mutation(graphene.ObjectType):
     login = Login.Field()
     create_emp = CreateEmp.Field()
     create_biz = CreateBiz.Field()
+    logout = Logout.Field()
 
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)

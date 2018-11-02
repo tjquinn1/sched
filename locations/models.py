@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import Biz
+from business.models import Biz
 from django.utils import timezone
 from django import forms
 

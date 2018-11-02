@@ -22,11 +22,21 @@ from django.conf import settings
 from . import views
 from django.views.decorators.csrf import csrf_exempt
 from graphene_django.views import GraphQLView
+from rest_framework import routers
+from accounts import views as accountViews
+from . import views
+
+
+router = routers.DefaultRouter()
+router.register(r'users', accountViews.UserViewSet)
+
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    path("^", include(router.urls)),
+    path("^api-auth/", include('rest_framework.urls', namespace='rest_framework')),
+    path("admin/", admin.site.urls),
+    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path("accounts/", include("accounts.urls", namespace='accounts')),
     path("schedules/", include("schedules.urls", namespace='schedules')),
     path("locations/", include("locations.urls", namespace='locations')),

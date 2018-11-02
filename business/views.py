@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from locations.models import Location
-from accounts.models import Biz
+from business.models import Biz
 
 
 def home(request):
