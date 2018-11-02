@@ -1,0 +1,35 @@
+{
+  "name": "sched",
+  "version": "1.0.0",
+  "description": "",
+  "main": "date.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjquinn1/sched.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tjquinn1/sched/issues"
+  },
+  "homepage": "https://github.com/tjquinn1/sched#readme",
+  "devDependencies": {
+    "react": "^16.2.0",
+    "webpack": "^3.10.0",
+    "webpack-bundle-tracker": "^0.2.1",
+    "webpack-dev-server": "^2.9.7"
+  },
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.1.4",
+    "apollo-client": "^2.0.4",
+    "apollo-client-preset": "^1.0.5",
+    "apollo-link": "^1.0.7",
+    "apollo-link-http": "^1.3.2",
+    "graphql": "^0.12.3",
+    "graphql-tag": "^2.6.1",
+    "vue-apollo": "^3.0.0-alpha.3"
+  }
+}

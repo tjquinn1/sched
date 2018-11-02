@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<div class="row">
+<div class="div">
     <form  method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -11,7 +11,7 @@
             <label for="{{ form.name.id_for_label }}">Location Name</label>
             {{ form.name }}
         </div>
-        <section>
+        <div class="row">
             <div class="form-group">
                 {{ form.sunday_start.errors }}
                 <label for="{{ form.sunday_start.id_for_label }}">Sunday Opening</label>
@@ -22,8 +22,8 @@
                 <label for="{{ form.sunday_end.id_for_label }}">Sunday Closing</label>
                 {{ form.sunday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ form.monday_start.errors }}
                 <label for="{{ form.monday_start.id_for_label }}">Monday Opening</label>
@@ -34,8 +34,8 @@
                 <label for="{{ form.monday_end.id_for_label }}">Monday Closing</label>
                 {{ form.monday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ form.tuesday_start.errors }}
                 <label for="{{ form.tuesday_start.id_for_label }}">Tuesday Opening</label>
@@ -46,8 +46,8 @@
                 <label for="{{ form.tuesday_end.id_for_label }}">Tuesday Closing</label>
                 {{ form.tuesday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ form.wednesday_start.errors }}
                 <label for="{{ form.wednesday_start.id_for_label }}">Wednesday Opening</label>
@@ -58,8 +58,8 @@
                 <label for="{{ form.wednesday_end.id_for_label }}">Wednesday Closing</label>
                 {{ form.wednesday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ form.thursday_start.errors }}
                 <label for="{{ form.thursday_start.id_for_label }}">Thursday Opening</label>
@@ -70,8 +70,8 @@
                 <label for="{{ form.thursday_end.id_for_label }}">Thursday Closing</label>
                 {{ form.thursday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ form.friday_start.errors }}
                 <label for="{{ form.friday_start.id_for_label }}">Friday Opening</label>
@@ -82,8 +82,8 @@
                 <label for="{{ form.friday_end.id_for_label }}">Friday Closing</label>
                 {{ form.friday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ form.saturday_start.errors }}
                 <label for="{{ form.saturday_start.id_for_label }}">Saturday Opening</label>
@@ -94,7 +94,7 @@
                 <label for="{{ form.saturday_end.id_for_label }}">Saturday Closing</label>
                 {{ form.saturday_end }}
             </div>
-        </section>
+        </div>
 
         <input type="submit" value="Submit" />
     </form>

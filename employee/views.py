@@ -4,5 +4,6 @@ from django.shortcuts import render
 
 
 def home(request):
-    return render(request, 'employee/home.html', {})
+    pants = "six"
+    return render(request, 'employee/home.html', {'pants':pants})
 

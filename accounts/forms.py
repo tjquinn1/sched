@@ -5,8 +5,8 @@ from django.forms.widgets import PasswordInput, TextInput
 from django import forms
 from . import models
 from .models import User
-from .models import Biz
-from.models import Emp
+from business.models import Biz
+from employee.models import Emp
 
 class UserCreateForm(UserCreationForm):
     class Meta:
@@ -24,7 +24,7 @@ class UserCreateForm(UserCreationForm):
 
 class BizForm(forms.ModelForm):
     class Meta:
-        model = models.Biz
+        model = Biz
         fields = [
             'name',
             
@@ -103,7 +103,7 @@ class EmpForm(forms.ModelForm):
 
 class BizPartialForm(forms.ModelForm):
     class Meta:
-        model = models.Biz
+        model = Biz
         fields = [
             
         ]

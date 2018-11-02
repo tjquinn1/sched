@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<div class="row">
+<div class="div">
     <form  method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -11,90 +11,97 @@
             <label for="{{ form.code.id_for_label }}">Code</label>
             {{ form.code }}
         </div>
-        <section>
+        <div class="row">
             <div class="form-group">
                 {{ empForm.sunday_start.errors }}
                 <label for="{{ empForm.sunday_start.id_for_label }}">Sunday Opening</label>
                 {{ empForm.sunday_start }}
             </div>
+            <div class="col-1"></div>
             <div class="form-group">
                 {{ empForm.sunday_end.errors }}
                 <label for="{{ empForm.sunday_end.id_for_label }}">Sunday Closing</label>
                 {{ empForm.sunday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ empForm.monday_start.errors }}
                 <label for="{{ empForm.monday_start.id_for_label }}">Monday Opening</label>
                 {{ empForm.monday_start }}
             </div>
+            <div class="col-1"></div>
             <div class="form-group">
                 {{ empForm.monday_end.errors }}
                 <label for="{{ empForm.monday_end.id_for_label }}">Monday Closing</label>
                 {{ empForm.monday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ empForm.tuesday_start.errors }}
                 <label for="{{ empForm.tuesday_start.id_for_label }}">Tuesday Opening</label>
                 {{ empForm.tuesday_start }}
             </div>
+            <div class="col-1"></div>
             <div class="form-group">
                 {{ empForm.tuesday_end.errors }}
                 <label for="{{ empForm.tuesday_end.id_for_label }}">Tuesday Closing</label>
                 {{ empForm.tuesday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ empForm.wednesday_start.errors }}
                 <label for="{{ empForm.wednesday_start.id_for_label }}">Wednesday Opening</label>
                 {{ empForm.wednesday_start }}
             </div>
+            <div class="col-1"></div>
             <div class="form-group">
                 {{ empForm.wednesday_end.errors }}
                 <label for="{{ empForm.wednesday_end.id_for_label }}">Wednesday Closing</label>
                 {{ empForm.wednesday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ empForm.thursday_start.errors }}
                 <label for="{{ empForm.thursday_start.id_for_label }}">Thursday Opening</label>
                 {{ empForm.thursday_start }}
             </div>
+            <div class="col-1"></div>
             <div class="form-group">
                 {{ empForm.thursday_end.errors }}
                 <label for="{{ empForm.thursday_end.id_for_label }}">Thursday Closing</label>
                 {{ empForm.thursday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ empForm.friday_start.errors }}
                 <label for="{{ empForm.friday_start.id_for_label }}">Friday Opening</label>
                 {{ empForm.friday_start }}
             </div>
+            <div class="col-1"></div>
             <div class="form-group">
                 {{ empForm.friday_end.errors }}
                 <label for="{{ empForm.friday_end.id_for_label }}">Friday Closing</label>
                 {{ empForm.friday_end }}
             </div>
-        </section>
-        <section>
+        </div>
+        <div class="row">
             <div class="form-group">
                 {{ empForm.saturday_start.errors }}
                 <label for="{{ empForm.saturday_start.id_for_label }}">Saturday Opening</label>
                 {{ empForm.saturday_start }}
             </div>
+            <div class="col-1"></div>
             <div class="form-group">
                 {{ empForm.saturday_end.errors }}
                 <label for="{{ empForm.saturday_end.id_for_label }}">Saturday Closing</label>
                 {{ empForm.saturday_end }}
             </div>
-        </section>
+        </div>
 
 
         <input type="submit" value="Submit" />

@@ -12,8 +12,20 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponseRedirect
 import random
 import string
-from .models import Biz
+from business.models import Biz
 from django.contrib import messages
+from rest_framework import viewsets
+from accounts.serializers import UserSerializer
+from django.contrib.auth import get_user_model
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    User = get_user_model()
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 def custom_login(request):
@@ -25,9 +37,12 @@ def custom_login(request):
             username = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             user = authenticate(email=username, password=password)
-            auth_login(request, user)
-            messages.success(request, "Welcome {}".format(form.cleaned_data['email']))
-            return HttpResponseRedirect('/login_success/')
+            if user is not None:
+                auth_login(request, user)
+                messages.success(request, "Welcome {}".format(request.user.first_name))
+                return HttpResponseRedirect('/login_success/')
+            else:
+                messages.error(request, "Your user name or password is incorect")
     return render(request, 'registration/login.html', {'form': form})
 
 
@@ -66,7 +81,6 @@ def Edit(request):
 @login_required
 def biz(request):
     form = forms.BizForm()
-    pos = forms.PartialUserForm(instance=request.user)
     code = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(6))
     # if this is a POST request we need to process the form data
     if request.method == 'POST':

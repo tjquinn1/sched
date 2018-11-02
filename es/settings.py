@@ -25,10 +25,18 @@ SECRET_KEY = 'hn4@vz9gq(c5(un5%-me5yt-u(0d%%gzviwwv7#u-75vw%xi8!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1' ,'http://localhost:8080/#/']
+CORS_ORIGIN_ALLOW_ALL = True 
 
 
 # Application definition
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
 
 INSTALLED_APPS = [
     'accounts',
@@ -38,12 +46,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'graphene_django',
+    'webpack_loader',
     'locations',
     'business',
     'employee',
+    'schedules',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -83,7 +98,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -126,3 +140,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
 
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = '/login_success/'
+
+GRAPHENE = {
+    'SCHEMA': 'es.schema.schema',
+}
+
+CORS_ORIGIN_ALLOW_ALL = True
