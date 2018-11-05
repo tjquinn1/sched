@@ -26,7 +26,7 @@ SECRET_KEY = 'hn4@vz9gq(c5(un5%-me5yt-u(0d%%gzviwwv7#u-75vw%xi8!'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1' ,'http://localhost:8080/#/']
-CORS_ORIGIN_ALLOW_ALL = True 
+
 
 
 # Application definition
@@ -48,8 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'graphene_django',
-    'webpack_loader',
     'locations',
     'business',
     'employee',
@@ -141,8 +139,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = '/login_success/'
 
-GRAPHENE = {
-    'SCHEMA': 'es.schema.schema',
-}
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8080',
+    '127.0.0.1:8080'
+)

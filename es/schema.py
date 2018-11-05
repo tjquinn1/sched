@@ -1,8 +1,5 @@
-import graphene
 
-import schedules.schema
-import accounts.schema
-import locations.schema
+
 
 
 class Query(accounts.schema.Query, schedules.schema.Query, locations.schema.Query, graphene.ObjectType):
