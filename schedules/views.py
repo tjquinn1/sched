@@ -3,7 +3,11 @@ from django.shortcuts import get_object_or_404, render
 from locations.models import Location
 from business.models import Biz
 from employee.models import Emp
-import json
+from schedules.serializers import ScheduleSerializer
+from employees.serializers import EmpSerializer
+from business.serializers import BizSerializer
+from location.serializers import LocationSerializer
+
 
 
 def create(request, pk):
@@ -63,4 +67,20 @@ def create(request, pk):
         'd': d
     }
     return render(request, 'schedules/create.html', context)
+
+def ScheduleView(APIView):
+    def post(self, request):
+        schedule = ScheduleSerializer(data=request.data)
+        if startTime is not 0:
+            schedule = Schedule(
+                start_time=startTime, 
+                end_time=endTime, 
+                location=loc, 
+                emp=ep,
+                date=date
+                )
+            
+            schedule.save()
+
+            return CreateSchedule(schedule=schedule)
 

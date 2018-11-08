@@ -5,3 +5,4 @@ class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Schedule
         fields = ('location', 'emp', 'date', 'start_time', 'end_time')
+
